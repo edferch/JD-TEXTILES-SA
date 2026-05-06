@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - JD Textiles{% endblock %}
+{% block header %}Vista General de Planta{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    <!-- Tarjeta de ejemplo 1 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">Órdenes Activas</h3>
+        <p class="text-3xl font-bold text-gray-800 mt-2">12</p>
+    </div>
+
+    <!-- Tarjeta de ejemplo 2 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">En Telar</h3>
+        <p class="text-3xl font-bold text-gray-800 mt-2">5</p>
+    </div>
+
+    <!-- Tarjeta de ejemplo 3 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">En Terminados</h3>
+        <p class="text-3xl font-bold text-gray-800 mt-2">3</p>
+    </div>
+
+    <!-- Tarjeta de ejemplo 4 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">Listas para Envío</h3>
+        <p class="text-3xl font-bold text-gray-800 mt-2">4</p>
+    </div>
+</div>
+
+<div class="mt-8 bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-4">Bienvenido al nuevo sistema</h3>
+    <p class="text-gray-600">Este es el dashboard nativo. Aquí mostraremos la tabla de trazabilidad para que la gerencia pueda ver en tiempo real el estado de cada P.O. Number sin usar hojas de cálculo externas.</p>
+</div>
+{% endblock %}

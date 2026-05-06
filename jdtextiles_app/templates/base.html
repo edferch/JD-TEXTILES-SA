@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JD Textiles - Producción{% endblock %}</title>
+    <!-- Aquí inyectamos Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal flex">
+
+    <!-- Menú Lateral (Sidebar) -->
+    <div class="bg-gray-900 shadow-xl h-screen w-64 fixed left-0 top-0 z-10">
+        <div class="p-4 mt-4 text-center">
+            <h1 class="text-white text-2xl font-bold uppercase tracking-wider">JD Textiles</h1>
+            <p class="text-gray-400 text-sm mt-1">Control de Producción</p>
+        </div>
+        <nav class="mt-8">
+            <a href="/" class="block py-3 px-6 text-gray-100 hover:bg-gray-800 hover:text-white transition">🏠 Dashboard General</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition">📦 Bodega</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition">💧 Tiñería</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition">🧶 Telar</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition">✂️ Terminados</a>
+        </nav>
+    </div>
+
+    <!-- Contenido Principal Dinámico -->
+    <div class="ml-64 flex-1 flex flex-col min-h-screen">
+        <!-- Barra superior (Navbar) -->
+        <header class="bg-white shadow-md p-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-800">{% block header %}Panel de Control{% endblock %}</h2>
+            <div class="text-gray-600 font-medium">
+                <!-- Aquí luego pondremos el nombre del usuario logueado -->
+                👤 Usuario: Administrador
+            </div>
+        </header>
+
+        <!-- Aquí se inyectará el contenido de cada pantalla -->
+        <main class="p-6 flex-1">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>
