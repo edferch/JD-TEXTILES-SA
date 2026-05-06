@@ -1,5 +1,5 @@
 from django import forms
-from .models import OrdenTrabajo
+from .models import OrdenTrabajo, InstruccionCorreo
 
 class OrdenTrabajoForm(forms.ModelForm):
     class Meta:
@@ -16,4 +16,16 @@ class OrdenTrabajoForm(forms.ModelForm):
             'dimensiones': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
             'tipo': forms.Select(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
             'layout_img': forms.FileInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded bg-white'}),
+        }
+
+class InstruccionForm(forms.ModelForm):
+    class Meta:
+        model = InstruccionCorreo
+        fields = ['fecha_recibido', 'texto_instruccion']
+
+        widgets = {
+            #type: 'date'  hace que aparezca un calendario 
+            'fecha_recibido': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
+            'texto_instruccion': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'rows': 4, 'placeholder': 'Pega aquí el texto del correo de confirmación...'}),
+            
         }

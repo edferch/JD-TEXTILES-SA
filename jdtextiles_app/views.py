@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
-from .forms import OrdenTrabajoForm
-from .models import OrdenTrabajo 
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import OrdenTrabajoForm, InstruccionForm
+from .models import OrdenTrabajo, InstruccionCorreo
 
 def dashboard_principal(request):
     #Traer ordenes de PostgreSQL
@@ -22,3 +22,28 @@ def crear_orden(request):
         form = OrdenTrabajoForm()
     
     return render(request, 'crear_orden.html', {'form': form})
+
+def ficha_orden(request, orden_id):
+    # Buscamos la orden específica en la base de datos
+    orden = get_object_or_404(OrdenTrabajo, id=orden_id)
+    
+    # Traemos todas las instrucciones que ya tiene esta orden
+    instrucciones = orden.instrucciones.all().order_by('-fecha_registro')
+    
+    # Si el usuario quiere guardar un nuevo correo
+    if request.method == 'POST':
+        form = InstruccionForm(request.POST)
+        if form.is_valid():
+            nueva_instruccion = form.save(commit=False)
+            nueva_instruccion.orden = orden # Amarramos la instrucción a esta orden
+            nueva_instruccion.creado_por = request.user # Guardamos quién lo hizo
+            nueva_instruccion.save()
+            return redirect('ficha_orden', orden_id=orden.id) # Recargamos la página
+    else:
+        form = InstruccionForm()
+        
+    return render(request, 'ficha_orden.html', {
+        'orden': orden,
+        'instrucciones': instrucciones,
+        'form': form
+    })
