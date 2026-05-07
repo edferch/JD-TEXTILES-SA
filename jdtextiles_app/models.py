@@ -36,12 +36,13 @@ class OrdenTrabajo(models.Model):
         return f"PO: {self.po_number} - {self.cliente}"
     
 class InstruccionCorreo(models.Model):
-    # Relacionamos la instrucción con la orden de trabajo
     orden = models.ForeignKey(OrdenTrabajo, on_delete=models.CASCADE, related_name='instrucciones')
     fecha_recibido = models.DateField(verbose_name="Fecha del Correo")
-    texto_instruccion = models.TextField(verbose_name="Texto de la Instrucción")
+    # Instrucciones resumidas para los operarios
+    instrucciones_clave = models.TextField(verbose_name="Instrucciones Específicas")
+    # El correo completo como respaldo
+    cuerpo_correo = models.TextField(verbose_name="Cuerpo Completo del Correo", blank=True, null=True)
     
-    # Saber qué usuario del sistema copió y pegó esta instrucción
     creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 

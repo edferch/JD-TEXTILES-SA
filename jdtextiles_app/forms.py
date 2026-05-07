@@ -21,11 +21,10 @@ class OrdenTrabajoForm(forms.ModelForm):
 class InstruccionForm(forms.ModelForm):
     class Meta:
         model = InstruccionCorreo
-        fields = ['fecha_recibido', 'texto_instruccion']
-
+        fields = ['fecha_recibido', 'instrucciones_clave', 'cuerpo_correo'] # Agregamos ambos
+        
         widgets = {
-            #type: 'date'  hace que aparezca un calendario 
             'fecha_recibido': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
-            'texto_instruccion': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'rows': 4, 'placeholder': 'Pega aquí el texto del correo de confirmación...'}),
-            
+            'instrucciones_clave': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded mb-2', 'rows': 3, 'placeholder': '¿Qué hay que hacer exactamente?'}),
+            'cuerpo_correo': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded', 'rows': 5, 'placeholder': 'Pega aquí todo el texto del correo...'}),
         }
