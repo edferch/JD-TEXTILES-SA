@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required   #importa el candado
-from .forms import OrdenTrabajoForm, InstruccionForm
+from .forms import OrdenTrabajoForm, InstruccionForm, CalculoMaterialForm
 from .models import OrdenTrabajo, InstruccionCorreo
 
 @login_required(login_url='login')  # Esto asegura que solo los usuarios logueados puedan ver esta vista
@@ -59,3 +59,27 @@ def panel_tineria(request):
     ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion') # Ordenamos por fecha de creación, la más reciente primero
     
     return render(request, 'panel_tineria.html', {'ordenes': ordenes})
+
+@login_required(login_url='login')
+def panel_calculo(request):
+    # Magia de Django: Filtramos SOLO las órdenes que NO tienen cálculo (isnull=True)
+    ordenes_pendientes = OrdenTrabajo.objects.filter(calculo__isnull=True).order_by('fecha_creacion')
+    return render(request, 'panel_calculo.html', {'ordenes': ordenes_pendientes})
+
+@login_required(login_url='login')
+def calcular_orden(request, orden_id):
+    orden = get_object_or_404(OrdenTrabajo, id=orden_id)
+    
+    if request.method == 'POST':
+        form = CalculoMaterialForm(request.POST)
+        if form.is_valid():
+            calculo = form.save(commit=False)
+            calculo.orden = orden
+            calculo.creado_por = request.user
+            calculo.save()
+            return redirect('panel_calculo') # Lo regresamos a la lista
+    else:
+        # El formulario inicia vacío, pero si la orden es de MANO, lo preseleccionamos
+        form = CalculoMaterialForm(initial={'metodo': orden.tipo})
+        
+    return render(request, 'calcular_orden.html', {'form': form, 'orden': orden})

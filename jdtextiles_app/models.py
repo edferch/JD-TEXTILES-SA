@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 # Opciones de departamentos para el filtrado (El inicio de nuestro RBAC)
 DEPARTAMENTOS = [
+    ('CALCULO', 'Cálculo de Material'),
     ('BODEGA', 'Bodega'),
     ('TINERIA', 'Tiñería'),
     ('PREPARACION', 'Preparación'),
@@ -62,3 +63,30 @@ class TrackingProduccion(models.Model):
 
     def __str__(self):
         return f"{self.orden.po_number} - {self.departamento} ({self.estado})"
+    
+class CalculoMaterial(models.Model):
+    # Esto amarra el cálculo al P.O. Number
+    orden = models.OneToOneField(OrdenTrabajo, on_delete=models.CASCADE, related_name='calculo')
+    
+    # Opciones que me pediste
+    TIPO_CALCULO = [('MANO', 'A Mano (Hand)'), ('MAQUINA', 'A Máquina (Machine)')]
+    metodo = models.CharField(max_length=15, choices=TIPO_CALCULO)
+    
+    # === DATOS EXTRAÍDOS DE TU EXCEL (Específicos para Mano) ===
+    sq_ft = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, verbose_name="SQ.F.")
+    hilos_por_pulgada = models.CharField(max_length=50, null=True, blank=True, verbose_name="Hilos x Plg")
+    peine = models.CharField(max_length=50, null=True, blank=True, verbose_name="Peine")
+    por_diente = models.CharField(max_length=100, null=True, blank=True, verbose_name="Por Diente")
+    
+    # === DESGLOSE DE MATERIALES ===
+    # Aquí guardaremos lo que va en PIE (SDA, colores, cables, libras)
+    material_pie = models.TextField(verbose_name="Detalle Material en PIE")
+    # Aquí guardaremos lo que va en TRAMA
+    material_trama = models.TextField(verbose_name="Detalle Material en TRAMA")
+    
+    # Quién hizo el cálculo y cuándo
+    creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Cálculo {self.metodo} - PO: {self.orden.po_number}"

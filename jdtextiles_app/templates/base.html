@@ -21,6 +21,10 @@
             <a href="{% url 'crear_orden' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">📥 Ingresar Orden</a>
             {% endif %}
 
+            {% if request.user.perfilusuario.departamento == 'CALCULO' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
+            <a href="{% url 'panel_calculo' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">🧮 Cálculo de Material</a>
+            {% endif %}
+
             {% if request.user.perfilusuario.departamento == 'TINERIA' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
             <a href="{% url 'panel_tineria' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">💧 Panel de Tiñería</a>
             {% endif %}
