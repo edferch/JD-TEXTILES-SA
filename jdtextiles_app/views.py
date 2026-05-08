@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required   #importa el candado
 from .forms import OrdenTrabajoForm, InstruccionForm
 from .models import OrdenTrabajo, InstruccionCorreo
 
+@login_required(login_url='login')  # Esto asegura que solo los usuarios logueados puedan ver esta vista
 def dashboard_principal(request):
     #Traer ordenes de PostgreSQL
     ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion') # Ordenamos por fecha de creación, la más reciente primero
@@ -9,6 +11,7 @@ def dashboard_principal(request):
     #se envia a la plantilla HTML
     return render(request, 'index.html', {'ordenes': ordenes})
 
+@login_required(login_url='login')
 def crear_orden(request):
     # Si el usuario le dio clic al botón "Guardar" (POST)
     if request.method == 'POST':
@@ -23,6 +26,8 @@ def crear_orden(request):
     
     return render(request, 'crear_orden.html', {'form': form})
 
+
+@login_required(login_url='login')
 def ficha_orden(request, orden_id):
     # Buscamos la orden específica en la base de datos
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
