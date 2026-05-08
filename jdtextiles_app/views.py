@@ -52,3 +52,10 @@ def ficha_orden(request, orden_id):
         'instrucciones': instrucciones,
         'form': form
     })
+
+@login_required(login_url='login')
+def panel_tineria(request):
+    #Traer las ordenes
+    ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion') # Ordenamos por fecha de creación, la más reciente primero
+    
+    return render(request, 'panel_tineria.html', {'ordenes': ordenes})
