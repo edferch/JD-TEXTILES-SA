@@ -17,24 +17,24 @@
         </div>
         <nav class="mt-8">
             {% if request.user.perfilusuario.departamento == 'GERENCIA' or request.user.perfilusuario.departamento == 'BODEGA' or request.user.is_superuser %}
-            <a href="{% url 'dashboard' %}" class="block py-3 px-6 text-gray-100 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">🏠 Dashboard General</a>
-            <a href="{% url 'crear_orden' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">📥 Ingresar Orden</a>
+            <a href="{% url 'dashboard' %}" class="block py-3 px-6 text-gray-100 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Dashboard General</a>
+            <a href="{% url 'crear_orden' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Ingresar Orden</a>
             {% endif %}
 
             {% if request.user.perfilusuario.departamento == 'CALCULO' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
-            <a href="{% url 'panel_calculo' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">🧮 Cálculo de Material</a>
+            <a href="{% url 'panel_calculo' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Cálculo de Material</a>
             {% endif %}
 
             {% if request.user.perfilusuario.departamento == 'TINERIA' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
-            <a href="{% url 'panel_tineria' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">💧 Panel de Tiñería</a>
+            <a href="{% url 'panel_tineria' %}" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Panel de Tiñería</a>
             {% endif %}
 
             {% if request.user.perfilusuario.departamento == 'TELAR' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
-            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">🧶 Panel de Telar</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Panel de Telar</a>
             {% endif %}
             
             {% if request.user.perfilusuario.departamento == 'TERMINADOS' or request.user.perfilusuario.departamento == 'GERENCIA' or request.user.is_superuser %}
-            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">✂️ Panel de Terminados</a>
+            <a href="#" class="block py-3 px-6 text-gray-400 hover:bg-gray-800 hover:text-white transition border-l-4 border-transparent hover:border-blue-500">Panel de Terminados</a>
             {% endif %}
         </nav>
     </div>
@@ -56,7 +56,7 @@
                 <form action="{% url 'logout' %}" method="post" class="m-0">
                     {% csrf_token %}
                     <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold p-2 rounded-lg text-xs transition border border-red-200">
-                        🚪 Salir
+                        Salir
                     </button>
                 </form>
             </div>

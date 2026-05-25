@@ -9,11 +9,11 @@ class OrdenTrabajoForm(forms.ModelForm):
         
         # Le inyectamos los estilos de Tailwind a cada cajita de texto
         widgets = {
-            'po_number': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
-            'invoice_number': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
-            'cliente': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
-            'diseno': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
-            'dimensiones': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
+            'po_number': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500', 'autocomplete': 'off'}),
+            'invoice_number': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500', 'autocomplete': 'off'}),
+            'cliente': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500', 'autocomplete': 'off'}),
+            'diseno': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500', 'autocomplete': 'off'}),
+            'dimensiones': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500', 'autocomplete': 'off'}),
             'tipo': forms.Select(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500'}),
             'layout_img': forms.FileInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded bg-white'}),
         }
@@ -24,7 +24,7 @@ class InstruccionForm(forms.ModelForm):
         fields = ['fecha_recibido', 'instrucciones_clave', 'cuerpo_correo'] # Agregamos ambos
         
         widgets = {
-            'fecha_recibido': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
+            'fecha_recibido': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'autocomplete': 'off'}),
             'instrucciones_clave': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded mb-2', 'rows': 3, 'placeholder': '¿Qué hay que hacer exactamente?'}),
             'cuerpo_correo': forms.Textarea(attrs={'class': 'w-full p-2 border border-gray-300 rounded', 'rows': 5, 'placeholder': 'Pega aquí todo el texto del correo...'}),
         }
@@ -35,10 +35,10 @@ class CalculoMaterialForm(forms.ModelForm):
         
         widgets = {
             'metodo': forms.Select(attrs={'class': 'w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-500 font-bold', 'id': 'select-metodo'}),
-            'sq_ft': forms.NumberInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'step': '0.001'}),
-            'hilos_por_pulgada': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
-            'peine': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
-            'por_diente': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500'}),
+            'sq_ft': forms.NumberInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'step': '0.001', 'autocomplete': 'off'}),
+            'hilos_por_pulgada': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'autocomplete': 'off'}),
+            'peine': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'autocomplete': 'off'}),
+            'por_diente': forms.TextInput(attrs={'class': 'w-full p-2 border border-gray-300 rounded focus:border-blue-500', 'autocomplete': 'off'}),
             
             # Textareas para los desgloses de colores y libras
             'material_pie': forms.Textarea(attrs={'class': 'w-full p-3 border border-gray-300 rounded-lg font-mono text-sm', 'rows': 5, 'placeholder': 'Ej. SDA 34/2 - pendine sands - 5/u T...'}),
