@@ -1,177 +1,235 @@
 {% extends 'base.html' %}
 
-{% block title %}Calculo a Mano: {{ orden.po_number }} - JD Textiles{% endblock %}
-{% block header %}Calculo de Material (Telar Manual): {{ orden.po_number }}{% endblock %}
+{% block title %}Cálculo a Mano: {{ orden.po_number }} - JD Textiles{% endblock %}
+{% block header %}Cálculo de Material (Telar Manual): {{ orden.po_number }}{% endblock %}
 
 {% block content %}
-<div class="bg-white rounded-lg shadow-xl p-8 border-t-4 border-yellow-500">
-    <form method="POST" id="form-calculo">
+<div class="bg-slate-100 p-4 md:p-6 min-h-screen">
+<div class="p-4 md:p-6 min-h-screen">
+    
+    <form method="POST" id="form-calculo" class="max-w-[1400px] mx-auto space-y-6">
         {% csrf_token %}
         
-        <h3 class="text-lg font-black text-gray-800 uppercase border-b pb-2 mb-4">1. Medidas y Conversion</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <div>
-                <label class="block text-gray-700 text-xs font-bold uppercase mb-2 text-blue-600">Ancho</label>
-                <div class="flex gap-2">
-                    <div class="w-1/2">
-                        <input type="number" id="ancho_ft" class="w-full p-2 border rounded text-center input-calc" placeholder="Pies">
-                        <span class="text-[10px] text-gray-500 font-bold">FT</span>
-                    </div>
-                    <div class="w-1/2">
-                        <input type="number" id="ancho_in" class="w-full p-2 border rounded text-center input-calc" placeholder="Pulg.">
-                        <span class="text-[10px] text-gray-500 font-bold">IN</span>
+        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
+            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
+        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
+            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">1. Medidas y Conversión</h3>
+                <span class="text-xs font-mono bg-slate-900 text-slate-300 px-2 py-1 rounded border border-slate-600">PO: {{ orden.po_number }}</span>
+                <span class="text-xs font-mono bg-blue-900/50 text-blue-300 px-2 py-1 rounded border border-blue-800">PO: {{ orden.po_number }}</span>
+            </div>
+            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex items-center gap-3">
+                    <label class="text-xs font-bold text-slate-600 w-16">ANCHO:</label>
+                    <label class="text-xs font-bold text-slate-300 w-16">ANCHO:</label>
+                    <div class="flex gap-2 flex-1">
+                        <div class="relative w-1/2">
+                            <input type="number" id="ancho_ft" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <input type="number" id="ancho_ft" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">FT</span>
+                        </div>
+                        <div class="relative w-1/2">
+                            <input type="number" id="ancho_in" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <input type="number" id="ancho_in" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">IN</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <label class="block text-gray-700 text-xs font-bold uppercase mb-2 text-blue-600">Largo</label>
-                <div class="flex gap-2">
-                    <div class="w-1/2">
-                        <input type="number" id="largo_ft" class="w-full p-2 border rounded text-center input-calc" placeholder="Pies">
-                        <span class="text-[10px] text-gray-500 font-bold">FT</span>
-                    </div>
-                    <div class="w-1/2">
-                        <input type="number" id="largo_in" class="w-full p-2 border rounded text-center input-calc" placeholder="Pulg.">
-                        <span class="text-[10px] text-gray-500 font-bold">IN</span>
+                <div class="flex items-center gap-3">
+                    <label class="text-xs font-bold text-slate-600 w-16">LARGO:</label>
+                    <label class="text-xs font-bold text-slate-300 w-16">LARGO:</label>
+                    <div class="flex gap-2 flex-1">
+                        <div class="relative w-1/2">
+                            <input type="number" id="largo_ft" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <input type="number" id="largo_ft" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">FT</span>
+                        </div>
+                        <div class="relative w-1/2">
+                            <input type="number" id="largo_in" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <input type="number" id="largo_in" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
+                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">IN</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="bg-blue-600 text-white p-4 rounded-lg flex flex-col justify-center items-center shadow-inner">
-                <span class="text-xs font-bold uppercase tracking-widest opacity-80">Total (SQ.F.)</span>
-                <span id="display_sqft" class="text-4xl font-black mt-1">0.00</span>
-                <span id="display_pulgadas" class="text-[10px] mt-1 opacity-70">0" x 0"</span>
+                <div class="flex items-center justify-end gap-4 bg-slate-50 p-2 border border-slate-200 rounded-sm">
+                <div class="flex items-center justify-end gap-4 bg-slate-900/50 p-2 border border-slate-700 rounded-sm">
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase">Total Área</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Total Área</p>
+                        <p id="display_pulgadas" class="text-[10px] text-slate-400 font-mono">0" x 0"</p>
+                    </div>
+                    <div class="text-2xl font-black text-blue-700" id="display_sqft">0.00</div>
+                    <div class="text-2xl font-black text-blue-400" id="display_sqft">0.00</div>
+                    <div class="text-[10px] font-bold text-slate-500">SQ.F.</div>
+                </div>
             </div>
         </div>
 
-        <h3 class="text-lg font-black text-gray-800 uppercase border-b pb-2 mb-4">2. Parametros de Tejido</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div><label class="block text-xs font-bold text-gray-600 uppercase">Peine</label><input type="text" class="w-full p-2 border rounded"></div>
-            <div><label class="block text-xs font-bold text-gray-600 uppercase">Hilos x Pulgada</label><input type="text" class="w-full p-2 border rounded"></div>
-            <div><label class="block text-xs font-bold text-gray-600 uppercase">Hilos x Pua</label><input type="text" class="w-full p-2 border rounded"></div>
+        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
+            <div class="bg-slate-700 px-4 py-2">
+        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
+            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">2. Parámetros de Telar y Urdido</h3>
+            </div>
+            
+            <div class="p-4 flex flex-col lg:flex-row gap-6">
+                <div class="lg:w-1/3 space-y-3 pr-6 lg:border-r border-slate-200">
+                <div class="lg:w-1/3 space-y-3 pr-6 lg:border-r border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-600">PEINE:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-300">PEINE:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-600">HILOS X PLG:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-300">HILOS X PLG:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-600">POR PÚA:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-300">POR PÚA:</label>
+                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="lg:w-2/3 flex flex-col justify-center">
+                    <div class="flex flex-wrap items-end gap-4 mb-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Estilo</label>
+                            <select id="tipo_patron" class="py-1 px-2 border border-slate-300 rounded-sm text-xs font-bold focus:ring-1 focus:ring-blue-500 outline-none input-patron">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Estilo</label>
+                            <select id="tipo_patron" class="py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs font-bold focus:ring-1 focus:ring-blue-500 outline-none input-patron">
+                                <option value="LISO">Liso (Sólido)</option>
+                                <option value="DISENO">Diseño (Repetición)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Ganancia (IN)</label>
+                            <input type="number" step="0.01" id="ganancia_pulgadas" class="w-20 py-1 px-2 border border-slate-300 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="0">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Ganancia (IN)</label>
+                            <input type="number" step="0.01" id="ganancia_pulgadas" class="w-20 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="0">
+                        </div>
+                        <div id="div_repeticiones" class="hidden">
+                            <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
+                            <input type="number" step="0.01" id="repeticiones" class="w-20 py-1 px-2 border border-blue-300 bg-blue-50 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="1">
+                            <input type="number" step="0.01" id="repeticiones" class="w-20 py-1 px-2 border border-blue-700 bg-blue-900/30 text-blue-200 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="1">
+                        </div>
+                        
+                        <div class="ml-auto bg-slate-800 text-white px-4 py-1.5 rounded-sm shadow-inner flex items-center gap-3">
+                            <label class="text-xs font-bold uppercase">Total Pies Urdido:</label>
+                            <input type="number" id="pies_urdir" class="w-16 bg-transparent text-lg font-black text-center outline-none input-pie" readonly>
+                        <div class="ml-auto bg-slate-900 text-slate-200 px-4 py-1.5 rounded-sm shadow-inner border border-slate-700 flex items-center gap-3">
+                            <label class="text-xs font-bold uppercase text-slate-400">Total Pies Urdido:</label>
+                            <input type="number" id="pies_urdir" class="w-16 bg-transparent text-blue-400 text-lg font-black text-center outline-none input-pie" readonly>
+                        </div>
+                    </div>
+                    <p id="explicacion_regla" class="text-[10px] text-slate-400 font-mono">Fórmula: Ancho + Ganancia</p>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-yellow-50 p-5 rounded-lg border border-yellow-300 mb-8 shadow-sm">
-            <h4 class="text-sm font-bold text-yellow-800 uppercase mb-3">Regla de Calculo para PIE (Total Pies)</h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-end">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase">Estilo de Alfombra</label>
-                    <select id="tipo_patron" class="w-full p-2 border rounded input-patron font-bold">
-                        <option value="LISO">Liso (Color Solido)</option>
-                        <option value="DISENO">Con Diseno / Repeticion</option>
+        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
+            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
+        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
+            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">3. Material en Pie (Urdido)</h3>
+                <div class="flex gap-2">
+                    <select id="select-compuestos-pie" class="py-1 px-2 border border-slate-500 bg-slate-600 text-white rounded-sm text-xs font-bold outline-none">
+                    <select id="select-compuestos-pie" class="py-1 px-2 border border-slate-600 bg-slate-700 text-white rounded-sm text-xs font-bold outline-none">
+                        <option value="1">Sencillo (1)</option>
+                        <option value="2">Doble (2)</option>
+                        <option value="3">Triple (3)</option>
                     </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase">Ganancia (Pulgadas)</label>
-                    <input type="number" step="0.01" id="ganancia_pulgadas" class="w-full p-2 border rounded input-patron text-center" value="0">
-                </div>
-                
-                <div id="div_repeticiones" class="hidden">
-                    <label class="block text-xs font-bold text-blue-700 uppercase">Repeticiones</label>
-                    <input type="number" step="0.01" id="repeticiones" class="w-full p-2 border border-blue-300 bg-blue-50 rounded input-patron text-center" value="1">
-                </div>
-
-                <div class="bg-white p-2 rounded border-2 border-yellow-500 text-center">
-                    <label class="block text-[10px] font-black text-yellow-600 uppercase">Total Pies (Base Urdido)</label>
-                    <input type="number" id="pies_urdir" class="w-full font-black text-lg text-center bg-transparent outline-none input-pie" readonly>
+                    <button type="button" id="btn-agregar-pie" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors">+ Añadir</button>
+                    <button type="button" id="btn-agregar-pie" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors border border-blue-700">+ Añadir</button>
                 </div>
             </div>
-            <p id="explicacion_regla" class="text-xs text-yellow-700 mt-3 italic">Formula Liso: (Ancho en pulgadas + Ganancia). Las pulgadas pasan directo como base.</p>
+            
+            <div class="overflow-x-auto p-2">
+                <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-pie">
+                    <thead>
+                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-300">
+                        <tr class="text-[10px] font-bold text-slate-400 uppercase border-b-2 border-slate-600">
+                            <th class="p-1 w-48">Material</th>
+                            <th class="p-1 w-32">Color</th>
+                            <th class="p-1 text-center w-16">Unds</th>
+                            <th class="p-1 text-center w-16">Torc</th>
+                            <th class="p-1 text-center w-20">Hilos/Pie</th>
+                            <th class="p-1 text-center w-24">Total Hilos</th>
+                            <th class="p-1 text-center w-24">Peso Indv.</th>
+                            <th class="p-1 text-center w-20">Lbs Est.</th>
+                            <th class="p-1 text-center w-24">Lbs Final</th>
+                            <th class="p-1 text-center w-8"></th>
+                        </tr>
+                    </thead>
+                    <tfoot id="tfoot-pie">
+                        <tr class="border-t-2 border-slate-400 text-xs font-bold bg-slate-50 text-slate-800">
+                        <tr class="border-t-2 border-slate-600 text-xs font-bold bg-slate-900 text-slate-200">
+                            <td colspan="5" class="py-2 px-2 text-right uppercase">Gran Total Pie:</td>
+                            <td class="py-2 px-2 text-center" id="pie_gran_total_hilos">0</td>
+                            <td></td>
+                            <td class="py-2 px-2 text-center" id="pie_gran_total_lbs">0</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
-        <div class="flex justify-between items-center border-b pb-2 mb-4 mt-8">
-            <h3 class="text-lg font-black text-gray-800 uppercase">3. Calculo de PIE (Urdido)</h3>
-            <button type="button" id="btn-agregar-pie" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-4 rounded transition">
-                + Agregar Hilo al Pie
-            </button>
-        </div>
-        
-        <div class="bg-green-50 p-4 rounded-lg border border-green-200 mb-8 overflow-x-auto">
-            <table class="w-full text-left border-collapse" id="tabla-pie">
-                <thead>
-                    <tr class="text-[10px] font-bold text-green-800 uppercase border-b border-green-300">
-                        <th class="p-2 w-1/5">Material</th>
-                        <th class="p-2 w-1/5">Color</th>
-                        <th class="p-2 text-center" title="Marcar si este hilo se tuerce/une con el anterior">Unido</th>
-                        <th class="p-2 text-center w-24">Hilos x Pie</th>
-                        <th class="p-2 text-center">Total Hilos</th>
-                        <th class="p-2 text-center w-24">Peso</th>
-                        <th class="p-2 text-center">Lbs (Est.)</th>
-                        <th class="p-2 text-center w-24">Lbs (Final)</th>
-                        <th class="p-2 text-center"></th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-pie">
-                    <tr class="border-b border-green-100 fila-pie">
-                        <td class="p-1"><input type="text" placeholder="Ej. SDA 34/2" class="w-full p-2 border rounded text-xs"></td>
-                        <td class="p-1"><input type="text" placeholder="Ej. Pendine Sands" class="w-full p-2 border rounded text-xs"></td>
-                        <td class="p-1 text-center"><input type="checkbox" class="h-4 w-4 text-green-600 rounded"></td>
-                        <td class="p-1"><input type="number" step="0.01" class="w-full p-2 border rounded text-xs text-center input-pie hilos-pie"></td>
-                        <td class="p-1 text-center font-bold text-xs total-hilos-row text-gray-700">0</td>
-                        <td class="p-1"><input type="number" step="0.001" class="w-full p-2 border rounded text-xs text-center input-pie peso-pie"></td>
-                        <td class="p-1 text-center font-bold text-xs text-gray-500 lbs-est-row">0</td>
-                        <td class="p-1"><input type="number" step="0.01" class="w-full p-2 border border-green-500 rounded text-xs text-center font-bold text-green-700 bg-white"></td>
-                        <td class="p-1 text-center"><button type="button" class="text-red-500 hover:text-red-700 font-bold text-xs btn-delete">X</button></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="bg-green-100 font-bold text-xs uppercase text-green-900">
-                        <td colspan="4" class="p-2 text-right">TOTALES PIE:</td>
-                        <td class="p-2 text-center" id="pie_gran_total_hilos">0</td>
-                        <td></td>
-                        <td class="p-2 text-center" id="pie_gran_total_lbs">0</td>
-                        <td colspan="2"></td>
-                    </tr>
-                </tfoot>
-            </table>
+        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
+            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
+        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
+            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">4. Material en Trama</h3>
+                <div class="flex gap-2">
+                    <select id="select-compuestos-trama" class="py-1 px-2 border border-slate-500 bg-slate-600 text-white rounded-sm text-xs font-bold outline-none">
+                    <select id="select-compuestos-trama" class="py-1 px-2 border border-slate-600 bg-slate-700 text-white rounded-sm text-xs font-bold outline-none">
+                        <option value="1">Sencillo (1)</option>
+                        <option value="2">Doble (2)</option>
+                        <option value="3">Triple (3)</option>
+                    </select>
+                    <button type="button" id="btn-agregar-trama" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors">+ Añadir</button>
+                    <button type="button" id="btn-agregar-trama" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors border border-blue-700">+ Añadir</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto p-2">
+                 <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-trama">
+                    <thead>
+                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-300">
+                        <tr class="text-[10px] font-bold text-slate-400 uppercase border-b-2 border-slate-600">
+                            <th class="p-1 w-48">Material</th>
+                            <th class="p-1 w-32">Color</th>
+                            <th class="p-1 text-center w-16">Unds</th>
+                            <th class="p-1 text-center w-16">Torc</th>
+                            <th class="p-1 text-center w-24">Oz/SQF</th>
+                            <th class="p-1 text-center w-24">Total Pasadas</th>
+                            <th class="p-1 text-center w-20">Lbs Est.</th>
+                            <th class="p-1 text-center w-24">Lbs Final</th>
+                            <th class="p-1 text-center w-8"></th>
+                        </tr>
+                    </thead>
+                    <tfoot id="tfoot-trama">
+                        <tr class="border-t-2 border-slate-400 text-xs font-bold bg-slate-50 text-slate-800">
+                        <tr class="border-t-2 border-slate-600 text-xs font-bold bg-slate-900 text-slate-200">
+                            <td colspan="5" class="py-2 px-2 text-right uppercase">Gran Total Trama:</td>
+                            <td class="py-2 px-2 text-center" id="trama_gran_total_pasadas">0</td>
+                            <td class="py-2 px-2 text-center" id="trama_gran_total_lbs">0</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
-        <div class="flex justify-between items-center border-b pb-2 mb-4 mt-8">
-            <h3 class="text-lg font-black text-gray-800 uppercase">4. Calculo de TRAMA</h3>
-            <button type="button" id="btn-agregar-trama" class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-4 rounded transition">
-                + Agregar Hilo a Trama
-            </button>
-        </div>
-
-        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200 mb-8 overflow-x-auto">
-             <table class="w-full text-left border-collapse" id="tabla-trama">
-                <thead>
-                    <tr class="text-[10px] font-bold text-orange-800 uppercase border-b border-orange-300">
-                        <th class="p-2 w-1/5">Material y Torcion</th>
-                        <th class="p-2 w-1/5">Color</th>
-                        <th class="p-2 text-center" title="Marcar si este hilo se tuerce/une con el anterior">Unido</th>
-                        <th class="p-2 text-center w-24">Onzas x SQ.F</th>
-                        <th class="p-2 text-center">Total Pasadas</th>
-                        <th class="p-2 text-center">Lbs (Est.)</th>
-                        <th class="p-2 text-center w-24">Lbs (Final)</th>
-                        <th class="p-2 text-center"></th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-trama">
-                    <tr class="border-b border-orange-100 fila-trama">
-                        <td class="p-1"><input type="text" placeholder="Ej. Fino SDA 34/2" class="w-full p-2 border rounded text-xs"></td>
-                        <td class="p-1"><input type="text" placeholder="Ej. Studland" class="w-full p-2 border rounded text-xs"></td>
-                        <td class="p-1 text-center"><input type="checkbox" class="h-4 w-4 text-orange-600 rounded"></td>
-                        <td class="p-1"><input type="number" step="0.001" class="w-full p-2 border rounded text-xs text-center input-trama onzas-trama"></td>
-                        <td class="p-1 text-center font-bold text-xs total-pasadas-row text-gray-700">0</td>
-                        <td class="p-1 text-center font-bold text-xs text-gray-500 lbs-est-trama-row">0</td>
-                        <td class="p-1"><input type="number" step="0.01" class="w-full p-2 border border-orange-500 rounded text-xs text-center font-bold text-orange-700 bg-white"></td>
-                        <td class="p-1 text-center"><button type="button" class="text-red-500 hover:text-red-700 font-bold text-xs btn-delete">X</button></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="bg-orange-100 font-bold text-xs uppercase text-orange-900">
-                        <td colspan="4" class="p-2 text-right">TOTALES TRAMA:</td>
-                        <td class="p-2 text-center" id="trama_gran_total_pasadas">0</td>
-                        <td class="p-2 text-center" id="trama_gran_total_lbs">0</td>
-                        <td colspan="2"></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <div class="flex justify-end gap-4 mt-8">
-            <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded transition">Generar PDF</button>
-            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 px-8 rounded shadow-lg transition">Guardar Calculo Oficial</button>
+        <div class="flex justify-end gap-4 mt-6">
+            <button type="button" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2 px-6 rounded-sm hover:bg-slate-50 transition-colors">Generar PDF</button>
+            <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold py-2 px-8 rounded-sm shadow-md transition-colors">Guardar Cálculo Oficial</button>
+            <button type="button" class="bg-slate-800 border border-slate-600 text-slate-300 text-sm font-bold py-2 px-6 rounded-sm hover:bg-slate-700 transition-colors shadow-sm">Generar PDF</button>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 px-8 rounded-sm shadow-md transition-colors border border-blue-700">Guardar Cálculo Oficial</button>
         </div>
     </form>
 </div>
@@ -182,7 +240,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let current_sqft = 0;
     let ancho_total_in = 0;
 
-    // 1. Calcular Area y Totales Base
     function calcularArea() {
         let a_ft = parseFloat(document.getElementById('ancho_ft').value) || 0;
         let a_in = parseFloat(document.getElementById('ancho_in').value) || 0;
@@ -201,7 +258,6 @@ document.addEventListener("DOMContentLoaded", function() {
         calcularTrama();
     }
 
-    // 2. Regla Liso vs Diseno
     function calcularReglaPatron() {
         let tipo = document.getElementById('tipo_patron').value;
         let ganancia = parseFloat(document.getElementById('ganancia_pulgadas').value) || 0;
@@ -210,125 +266,198 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (tipo === 'LISO') {
             document.getElementById('div_repeticiones').classList.add('hidden');
-            document.getElementById('explicacion_regla').innerText = `Formula Liso: ${ancho_total_in}" + ${ganancia}" ganancia. Pasa directo.`;
+            document.getElementById('explicacion_regla').innerText = `Fórmula: ${ancho_total_in}" + ${ganancia}" = Pasa directo`;
             total_base = ancho_con_ganancia;
         } else {
             document.getElementById('div_repeticiones').classList.remove('hidden');
             let repeticiones = parseFloat(document.getElementById('repeticiones').value) || 1;
             total_base = Math.ceil(ancho_con_ganancia / repeticiones);
-            document.getElementById('explicacion_regla').innerText = `Formula Diseno: Multiplo mayor de ((${ancho_total_in}" + ${ganancia}") / ${repeticiones}).`;
+            document.getElementById('explicacion_regla').innerText = `Fórmula: Múltiplo Mayor de ((${ancho_total_in}" + ${ganancia}") / ${repeticiones})`;
         }
 
         document.getElementById('pies_urdir').value = total_base;
-        calcularPie(); // Recalcular todo el pie si la base cambia
+        calcularPie(); 
     }
 
-    // 3. Calcular PIE (Multiples Filas)
+    // Funciones de Tablas: Notarás que los inputs ahora tienen py-1 (más delgados) y border-slate-300
+    function generarGrupoPie(cantidad) {
+        let tbody = document.createElement('tbody');
+        tbody.className = 'grupo-pie border-b-4 border-slate-100'; 
+        tbody.className = 'grupo-pie border-b-4 border-slate-900'; 
+        
+        let html = '';
+        for(let i = 0; i < cantidad; i++) {
+            html += `<tr class="fila-pie hover:bg-slate-50">`;
+            html += `<tr class="fila-pie hover:bg-slate-700/50">`;
+            
+            html += `
+                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1">
+                    <select class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center text-slate-700 focus:ring-1 focus:ring-blue-500 outline-none">
+                    <select class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none">
+                        <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
+                    </select>
+                </td>
+            `;
+
+            if(i === 0) {
+                html += `
+                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-200 bg-slate-50">
+                        <input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-pie hilos-pie font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-700 bg-slate-900/50">
+                        <input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-slate-200 rounded-sm text-center input-pie hilos-pie font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    </td>
+                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-800 total-hilos-row bg-slate-50 border-r border-slate-200 text-xs">0</td>
+                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-200 total-hilos-row bg-slate-900/50 border-r border-slate-700 text-xs">0</td>
+                `;
+            }
+
+            html += `
+                <td class="p-1"><input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-pie peso-pie focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
+                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center font-bold text-slate-800 focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center input-pie peso-pie focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1 text-center font-bold text-slate-400 lbs-est-row text-xs">0</td>
+                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center font-bold focus:ring-1 focus:ring-blue-500 outline-none"></td>
+            `;
+
+            if(i === 0) {
+                html += `<td rowspan="${cantidad}" class="p-1 align-middle text-center"><button type="button" class="text-slate-400 hover:text-red-500 font-black text-lg btn-delete-grupo">×</button></td>`;
+            }
+
+            html += `</tr>`;
+        }
+        tbody.innerHTML = html;
+        return tbody;
+    }
+
+    function generarGrupoTrama(cantidad) {
+        let tbody = document.createElement('tbody');
+        tbody.className = 'grupo-trama border-b-4 border-slate-100';
+        tbody.className = 'grupo-trama border-b-4 border-slate-900';
+        
+        let html = '';
+        for(let i = 0; i < cantidad; i++) {
+            html += `<tr class="fila-trama hover:bg-slate-50">`;
+            html += `<tr class="fila-trama hover:bg-slate-700/50">`;
+            
+            html += `
+                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1">
+                    <select class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center text-slate-700 focus:ring-1 focus:ring-blue-500 outline-none">
+                    <select class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none">
+                        <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
+                    </select>
+                </td>
+            `;
+
+            if(i === 0) {
+                html += `
+                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-200 bg-slate-50">
+                        <input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-trama onzas-trama font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-700 bg-slate-900/50">
+                        <input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-slate-200 rounded-sm text-center input-trama onzas-trama font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    </td>
+                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-800 total-pasadas-row bg-slate-50 border-r border-slate-200 text-xs">0</td>
+                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-200 total-pasadas-row bg-slate-900/50 border-r border-slate-700 text-xs">0</td>
+                `;
+            }
+
+            html += `
+                <td class="p-1 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
+                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center font-bold text-slate-800 focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-1 text-center font-bold text-slate-400 lbs-est-trama-row text-xs">0</td>
+                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center font-bold focus:ring-1 focus:ring-blue-500 outline-none"></td>
+            `;
+
+            if(i === 0) {
+                html += `<td rowspan="${cantidad}" class="p-1 align-middle text-center"><button type="button" class="text-slate-400 hover:text-red-500 font-black text-lg btn-delete-grupo">×</button></td>`;
+            }
+
+            html += `</tr>`;
+        }
+        tbody.innerHTML = html;
+        return tbody;
+    }
+
     function calcularPie() {
         let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0;
-        let filas = document.querySelectorAll('.fila-pie');
-        
-        let suma_hilos = 0;
-        let suma_lbs = 0;
+        let grupos = document.querySelectorAll('.grupo-pie');
+        let suma_hilos_total = 0; let suma_lbs_total = 0;
 
-        filas.forEach(fila => {
-            let hilos_pie = parseFloat(fila.querySelector('.hilos-pie').value) || 0;
-            let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0;
+        grupos.forEach(grupo => {
+            let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0;
+            let total_hilos_grupo = hilos_pie * pies_urdir;
+            grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2);
+            suma_hilos_total += total_hilos_grupo;
 
-            let total_hilos = hilos_pie * pies_urdir;
-            fila.querySelector('.total-hilos-row').innerText = total_hilos.toFixed(2);
-            suma_hilos += total_hilos;
-
-            let calculo_exacto = (peso * total_hilos) / 460;
-            let lbs_estimadas = Math.ceil(calculo_exacto); // Aproxima siempre hacia arriba
-            fila.querySelector('.lbs-est-row').innerText = lbs_estimadas;
-            suma_lbs += lbs_estimadas;
+            let filas = grupo.querySelectorAll('.fila-pie');
+            filas.forEach(fila => {
+                let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0;
+                let lbs_estimadas = Math.ceil((peso * total_hilos_grupo) / 460); 
+                fila.querySelector('.lbs-est-row').innerText = lbs_estimadas;
+                suma_lbs_total += lbs_estimadas;
+            });
         });
 
-        document.getElementById('pie_gran_total_hilos').innerText = suma_hilos.toFixed(2);
-        document.getElementById('pie_gran_total_lbs').innerText = suma_lbs;
+        document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2);
+        document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_total;
     }
 
-    // 4. Calcular TRAMA (Multiples Filas)
     function calcularTrama() {
-        let filas = document.querySelectorAll('.fila-trama');
-        
-        let suma_pasadas = 0;
-        let suma_lbs = 0;
+        let grupos = document.querySelectorAll('.grupo-trama');
+        let suma_pasadas_total = 0; let suma_lbs_total = 0;
 
-        filas.forEach(fila => {
-            let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0;
-            
-            let total_pasadas = onzas * current_sqft;
-            fila.querySelector('.total-pasadas-row').innerText = total_pasadas.toFixed(2);
-            suma_pasadas += total_pasadas;
+        grupos.forEach(grupo => {
+            let onzas = parseFloat(grupo.querySelector('.onzas-trama').value) || 0;
+            let total_pasadas_grupo = onzas * current_sqft;
+            grupo.querySelector('.total-pasadas-row').innerText = total_pasadas_grupo.toFixed(2);
+            suma_pasadas_total += total_pasadas_grupo;
 
-            let calculo_exacto = total_pasadas / 16;
-            let lbs_estimadas = Math.ceil(calculo_exacto); // Aproxima siempre hacia arriba
-            fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas;
-            suma_lbs += lbs_estimadas;
+            let filas = grupo.querySelectorAll('.fila-trama');
+            filas.forEach(fila => {
+                let lbs_estimadas = Math.ceil(total_pasadas_grupo / 16); 
+                fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas;
+                suma_lbs_total += lbs_estimadas;
+            });
         });
 
-        document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas.toFixed(2);
-        document.getElementById('trama_gran_total_lbs').innerText = suma_lbs;
+        document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2);
+        document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_total;
     }
 
-    // --- AGREGAR Y ELIMINAR FILAS DINAMICAMENTE ---
-    
+    // Inicialización y Eventos
+    document.getElementById('tabla-pie').insertBefore(generarGrupoPie(1), document.getElementById('tfoot-pie'));
+    document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(1), document.getElementById('tfoot-trama'));
+
     document.getElementById('btn-agregar-pie').addEventListener('click', function() {
-        let nuevaFila = document.querySelector('.fila-pie').cloneNode(true);
-        // Limpiar valores de la nueva fila
-        nuevaFila.querySelectorAll('input').forEach(input => {
-            if(input.type === 'checkbox') input.checked = false;
-            else input.value = '';
-        });
-        nuevaFila.querySelector('.total-hilos-row').innerText = '0';
-        nuevaFila.querySelector('.lbs-est-row').innerText = '0';
-        document.getElementById('tbody-pie').appendChild(nuevaFila);
+        document.getElementById('tabla-pie').insertBefore(generarGrupoPie(parseInt(document.getElementById('select-compuestos-pie').value)), document.getElementById('tfoot-pie'));
     });
-
     document.getElementById('btn-agregar-trama').addEventListener('click', function() {
-        let nuevaFila = document.querySelector('.fila-trama').cloneNode(true);
-        // Limpiar valores
-        nuevaFila.querySelectorAll('input').forEach(input => {
-            if(input.type === 'checkbox') input.checked = false;
-            else input.value = '';
-        });
-        nuevaFila.querySelector('.total-pasadas-row').innerText = '0';
-        nuevaFila.querySelector('.lbs-est-trama-row').innerText = '0';
-        document.getElementById('tbody-trama').appendChild(nuevaFila);
+        document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(parseInt(document.getElementById('select-compuestos-trama').value)), document.getElementById('tfoot-trama'));
     });
 
-    // Delegacion de eventos para recalcular al escribir y para eliminar filas
-    document.getElementById('tbody-pie').addEventListener('input', function(e) {
-        if (e.target.classList.contains('input-pie')) calcularPie();
-    });
-    
-    document.getElementById('tbody-pie').addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-delete')) {
-            if (document.querySelectorAll('.fila-pie').length > 1) {
-                e.target.closest('tr').remove();
-                calcularPie();
-            }
-        }
+    document.getElementById('tabla-pie').addEventListener('input', function(e) { if (e.target.classList.contains('input-pie')) calcularPie(); });
+    document.getElementById('tabla-pie').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); }
     });
 
-    document.getElementById('tbody-trama').addEventListener('input', function(e) {
-        if (e.target.classList.contains('input-trama')) calcularTrama();
+    document.getElementById('tabla-trama').addEventListener('input', function(e) { if (e.target.classList.contains('input-trama')) calcularTrama(); });
+    document.getElementById('tabla-trama').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); }
     });
 
-    document.getElementById('tbody-trama').addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-delete')) {
-            if (document.querySelectorAll('.fila-trama').length > 1) {
-                e.target.closest('tr').remove();
-                calcularTrama();
-            }
-        }
-    });
-
-    // Eventos estaticos superiores
-    document.querySelectorAll('.input-calc').forEach(i => i.addEventListener('input', calcularArea));
-    document.querySelectorAll('.input-patron').forEach(i => i.addEventListener('input', calcularReglaPatron));
+    document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea));
     document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
 
 });
