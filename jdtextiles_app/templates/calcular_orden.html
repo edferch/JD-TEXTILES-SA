@@ -4,155 +4,123 @@
 {% block header %}Cálculo de Material (Telar Manual): {{ orden.po_number }}{% endblock %}
 
 {% block content %}
-<div class="bg-slate-100 p-4 md:p-6 min-h-screen">
 <div class="p-4 md:p-6 min-h-screen">
     
     <form method="POST" id="form-calculo" class="max-w-[1400px] mx-auto space-y-6">
         {% csrf_token %}
         
-        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
-            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
-        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
-            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">1. Medidas y Conversión</h3>
-                <span class="text-xs font-mono bg-slate-900 text-slate-300 px-2 py-1 rounded border border-slate-600">PO: {{ orden.po_number }}</span>
-                <span class="text-xs font-mono bg-blue-900/50 text-blue-300 px-2 py-1 rounded border border-blue-800">PO: {{ orden.po_number }}</span>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">1. Medidas y Conversión</h3>
+                <span class="text-xs font-bold bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 shadow-sm">PO: {{ orden.po_number }}</span>
             </div>
-            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="flex items-center gap-3">
-                    <label class="text-xs font-bold text-slate-600 w-16">ANCHO:</label>
-                    <label class="text-xs font-bold text-slate-300 w-16">ANCHO:</label>
+                    <label class="text-xs font-bold text-slate-500 w-16">ANCHO:</label>
                     <div class="flex gap-2 flex-1">
                         <div class="relative w-1/2">
-                            <input type="number" id="ancho_ft" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <input type="number" id="ancho_ft" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">FT</span>
+                            <input type="number" id="ancho_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
                         </div>
                         <div class="relative w-1/2">
-                            <input type="number" id="ancho_in" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <input type="number" id="ancho_in" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">IN</span>
+                            <input type="number" id="ancho_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <label class="text-xs font-bold text-slate-600 w-16">LARGO:</label>
-                    <label class="text-xs font-bold text-slate-300 w-16">LARGO:</label>
+                    <label class="text-xs font-bold text-slate-500 w-16">LARGO:</label>
                     <div class="flex gap-2 flex-1">
                         <div class="relative w-1/2">
-                            <input type="number" id="largo_ft" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <input type="number" id="largo_ft" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">FT</span>
+                            <input type="number" id="largo_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
                         </div>
                         <div class="relative w-1/2">
-                            <input type="number" id="largo_in" class="w-full pl-2 pr-6 py-1 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <input type="number" id="largo_in" class="w-full pl-2 pr-6 py-1 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none input-calc">
-                            <span class="absolute right-2 top-1.5 text-[10px] font-bold text-slate-400">IN</span>
+                            <input type="number" id="largo_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center justify-end gap-4 bg-slate-50 p-2 border border-slate-200 rounded-sm">
-                <div class="flex items-center justify-end gap-4 bg-slate-900/50 p-2 border border-slate-700 rounded-sm">
+                <div class="flex items-center justify-end gap-4 bg-blue-50 p-3 border border-blue-200 rounded-lg shadow-inner">
                     <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase">Total Área</p>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Total Área</p>
-                        <p id="display_pulgadas" class="text-[10px] text-slate-400 font-mono">0" x 0"</p>
+                        <p class="text-[10px] font-bold text-blue-800 uppercase">Total Área</p>
+                        <p id="display_pulgadas" class="text-[10px] text-blue-600 font-mono">0" x 0"</p>
                     </div>
-                    <div class="text-2xl font-black text-blue-700" id="display_sqft">0.00</div>
-                    <div class="text-2xl font-black text-blue-400" id="display_sqft">0.00</div>
-                    <div class="text-[10px] font-bold text-slate-500">SQ.F.</div>
+                    <div class="text-3xl font-black text-blue-700" id="display_sqft">0.00</div>
+                    <div class="text-xs font-bold text-blue-800">SQ.F.</div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
-            <div class="bg-slate-700 px-4 py-2">
-        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
-            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">2. Parámetros de Telar y Urdido</h3>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">2. Parámetros de Telar y Urdido</h3>
             </div>
             
-            <div class="p-4 flex flex-col lg:flex-row gap-6">
-                <div class="lg:w-1/3 space-y-3 pr-6 lg:border-r border-slate-200">
-                <div class="lg:w-1/3 space-y-3 pr-6 lg:border-r border-slate-700">
+            <div class="p-5 flex flex-col lg:flex-row gap-6">
+                <div class="lg:w-1/3 space-y-4 pr-6 lg:border-r border-slate-200">
                     <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-600">PEINE:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
-                        <label class="text-xs font-bold text-slate-300">PEINE:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-500">PEINE:</label>
+                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-600">HILOS X PLG:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
-                        <label class="text-xs font-bold text-slate-300">HILOS X PLG:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-500">HILOS X PLG:</label>
+                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-600">POR PÚA:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-300 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
-                        <label class="text-xs font-bold text-slate-300">POR PÚA:</label>
-                        <input type="text" class="w-32 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <label class="text-xs font-bold text-slate-500">POR PÚA:</label>
+                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-500" title="Largo para Urdir">LARGO URDIR:</label>
+                        <input type="text" id="largo_urdir" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                 </div>
 
                 <div class="lg:w-2/3 flex flex-col justify-center">
-                    <div class="flex flex-wrap items-end gap-4 mb-2">
+                    <div class="flex flex-wrap items-end gap-5 mb-3">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Estilo</label>
-                            <select id="tipo_patron" class="py-1 px-2 border border-slate-300 rounded-sm text-xs font-bold focus:ring-1 focus:ring-blue-500 outline-none input-patron">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Estilo</label>
-                            <select id="tipo_patron" class="py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs font-bold focus:ring-1 focus:ring-blue-500 outline-none input-patron">
-                                <option value="LISO">Liso (Sólido)</option>
-                                <option value="DISENO">Diseño (Repetición)</option>
+                            <select id="tipo_patron" class="py-2 px-3 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm font-bold shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
+                                <option value="LISO">Liso</option>
+                                <option value="DISENO">Diseño</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Ganancia (IN)</label>
-                            <input type="number" step="0.01" id="ganancia_pulgadas" class="w-20 py-1 px-2 border border-slate-300 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="0">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Ganancia (IN)</label>
-                            <input type="number" step="0.01" id="ganancia_pulgadas" class="w-20 py-1 px-2 border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="0">
+                            <input type="number" id="ganancia_pulgadas" class="w-24 py-2 px-3 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
                         </div>
                         <div id="div_repeticiones" class="hidden">
                             <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
-                            <input type="number" step="0.01" id="repeticiones" class="w-20 py-1 px-2 border border-blue-300 bg-blue-50 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="1">
-                            <input type="number" step="0.01" id="repeticiones" class="w-20 py-1 px-2 border border-blue-700 bg-blue-900/30 text-blue-200 rounded-sm text-xs text-center focus:ring-1 focus:ring-blue-500 outline-none input-patron" value="1">
+                            <input type="number" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
                         </div>
                         
-                        <div class="ml-auto bg-slate-800 text-white px-4 py-1.5 rounded-sm shadow-inner flex items-center gap-3">
-                            <label class="text-xs font-bold uppercase">Total Pies Urdido:</label>
-                            <input type="number" id="pies_urdir" class="w-16 bg-transparent text-lg font-black text-center outline-none input-pie" readonly>
-                        <div class="ml-auto bg-slate-900 text-slate-200 px-4 py-1.5 rounded-sm shadow-inner border border-slate-700 flex items-center gap-3">
-                            <label class="text-xs font-bold uppercase text-slate-400">Total Pies Urdido:</label>
-                            <input type="number" id="pies_urdir" class="w-16 bg-transparent text-blue-400 text-lg font-black text-center outline-none input-pie" readonly>
+                        <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-md border border-slate-700 flex items-center gap-4">
+                            <label class="text-xs font-bold uppercase text-slate-300">Total Pies:</label>
+                            <input type="number" id="pies_urdir" class="w-20 bg-transparent text-blue-400 text-xl font-black text-center outline-none input-pie" readonly>
                         </div>
                     </div>
-                    <p id="explicacion_regla" class="text-[10px] text-slate-400 font-mono">Fórmula: Ancho + Ganancia</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
-            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
-        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
-            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">3. Material en Pie (Urdido)</h3>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Material en Pie</h3>
                 <div class="flex gap-2">
-                    <select id="select-compuestos-pie" class="py-1 px-2 border border-slate-500 bg-slate-600 text-white rounded-sm text-xs font-bold outline-none">
-                    <select id="select-compuestos-pie" class="py-1 px-2 border border-slate-600 bg-slate-700 text-white rounded-sm text-xs font-bold outline-none">
+                    <select id="select-compuestos-pie" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
                         <option value="1">Sencillo (1)</option>
                         <option value="2">Doble (2)</option>
                         <option value="3">Triple (3)</option>
                     </select>
-                    <button type="button" id="btn-agregar-pie" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors">+ Añadir</button>
-                    <button type="button" id="btn-agregar-pie" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors border border-blue-700">+ Añadir</button>
+                    <button type="button" id="btn-agregar-pie" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md shadow-sm transition-colors border border-blue-200">+ Añadir</button>
                 </div>
             </div>
             
-            <div class="overflow-x-auto p-2">
+            <div class="overflow-x-auto p-4">
                 <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-pie">
                     <thead>
-                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-300">
-                        <tr class="text-[10px] font-bold text-slate-400 uppercase border-b-2 border-slate-600">
+                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
                             <th class="p-1 w-48">Material</th>
                             <th class="p-1 w-32">Color</th>
                             <th class="p-1 text-center w-16">Unds</th>
@@ -166,12 +134,11 @@
                         </tr>
                     </thead>
                     <tfoot id="tfoot-pie">
-                        <tr class="border-t-2 border-slate-400 text-xs font-bold bg-slate-50 text-slate-800">
-                        <tr class="border-t-2 border-slate-600 text-xs font-bold bg-slate-900 text-slate-200">
-                            <td colspan="5" class="py-2 px-2 text-right uppercase">Gran Total Pie:</td>
-                            <td class="py-2 px-2 text-center" id="pie_gran_total_hilos">0</td>
+                        <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                            <td colspan="5" class="py-2 px-2 text-right uppercase">Total Pie:</td>
+                            <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_hilos">0</td>
                             <td></td>
-                            <td class="py-2 px-2 text-center" id="pie_gran_total_lbs">0</td>
+                            <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_lbs">0</td>
                             <td colspan="2"></td>
                         </tr>
                     </tfoot>
@@ -179,28 +146,23 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-md border border-slate-300 overflow-hidden">
-            <div class="bg-slate-700 px-4 py-2 flex justify-between items-center">
-        <div class="bg-slate-800 rounded-md shadow-lg border border-slate-700 overflow-hidden">
-            <div class="bg-slate-900/80 border-b border-slate-700 px-4 py-2 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider">4. Material en Trama</h3>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">4. Material en Trama</h3>
                 <div class="flex gap-2">
-                    <select id="select-compuestos-trama" class="py-1 px-2 border border-slate-500 bg-slate-600 text-white rounded-sm text-xs font-bold outline-none">
-                    <select id="select-compuestos-trama" class="py-1 px-2 border border-slate-600 bg-slate-700 text-white rounded-sm text-xs font-bold outline-none">
+                    <select id="select-compuestos-trama" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
                         <option value="1">Sencillo (1)</option>
                         <option value="2">Doble (2)</option>
                         <option value="3">Triple (3)</option>
                     </select>
-                    <button type="button" id="btn-agregar-trama" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors">+ Añadir</button>
-                    <button type="button" id="btn-agregar-trama" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs font-bold rounded-sm shadow-sm transition-colors border border-blue-700">+ Añadir</button>
+                    <button type="button" id="btn-agregar-trama" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md shadow-sm transition-colors border border-blue-200">+ Añadir</button>
                 </div>
             </div>
 
-            <div class="overflow-x-auto p-2">
+            <div class="overflow-x-auto p-4">
                  <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-trama">
                     <thead>
-                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-300">
-                        <tr class="text-[10px] font-bold text-slate-400 uppercase border-b-2 border-slate-600">
+                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
                             <th class="p-1 w-48">Material</th>
                             <th class="p-1 w-32">Color</th>
                             <th class="p-1 text-center w-16">Unds</th>
@@ -213,11 +175,10 @@
                         </tr>
                     </thead>
                     <tfoot id="tfoot-trama">
-                        <tr class="border-t-2 border-slate-400 text-xs font-bold bg-slate-50 text-slate-800">
-                        <tr class="border-t-2 border-slate-600 text-xs font-bold bg-slate-900 text-slate-200">
-                            <td colspan="5" class="py-2 px-2 text-right uppercase">Gran Total Trama:</td>
-                            <td class="py-2 px-2 text-center" id="trama_gran_total_pasadas">0</td>
-                            <td class="py-2 px-2 text-center" id="trama_gran_total_lbs">0</td>
+                        <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                            <td colspan="5" class="py-2 px-2 text-right uppercase">Total Trama:</td>
+                            <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_pasadas">0</td>
+                            <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_lbs">0</td>
                             <td colspan="2"></td>
                         </tr>
                     </tfoot>
@@ -225,11 +186,9 @@
             </div>
         </div>
 
-        <div class="flex justify-end gap-4 mt-6">
-            <button type="button" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2 px-6 rounded-sm hover:bg-slate-50 transition-colors">Generar PDF</button>
-            <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold py-2 px-8 rounded-sm shadow-md transition-colors">Guardar Cálculo Oficial</button>
-            <button type="button" class="bg-slate-800 border border-slate-600 text-slate-300 text-sm font-bold py-2 px-6 rounded-sm hover:bg-slate-700 transition-colors shadow-sm">Generar PDF</button>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 px-8 rounded-sm shadow-md transition-colors border border-blue-700">Guardar Cálculo Oficial</button>
+        <div class="flex justify-end gap-4 mt-8 pb-10">
+            <button type="button" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-8 rounded-lg shadow-md transition-colors">Guardar Cálculo Oficial</button>
         </div>
     </form>
 </div>
@@ -266,13 +225,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (tipo === 'LISO') {
             document.getElementById('div_repeticiones').classList.add('hidden');
-            document.getElementById('explicacion_regla').innerText = `Fórmula: ${ancho_total_in}" + ${ganancia}" = Pasa directo`;
             total_base = ancho_con_ganancia;
         } else {
             document.getElementById('div_repeticiones').classList.remove('hidden');
             let repeticiones = parseFloat(document.getElementById('repeticiones').value) || 1;
             total_base = Math.ceil(ancho_con_ganancia / repeticiones);
-            document.getElementById('explicacion_regla').innerText = `Fórmula: Múltiplo Mayor de ((${ancho_total_in}" + ${ganancia}") / ${repeticiones})`;
         }
 
         document.getElementById('pies_urdir').value = total_base;
@@ -282,52 +239,44 @@ document.addEventListener("DOMContentLoaded", function() {
     // Funciones de Tablas: Notarás que los inputs ahora tienen py-1 (más delgados) y border-slate-300
     function generarGrupoPie(cantidad) {
         let tbody = document.createElement('tbody');
-        tbody.className = 'grupo-pie border-b-4 border-slate-100'; 
-        tbody.className = 'grupo-pie border-b-4 border-slate-900'; 
+        tbody.className = 'grupo-pie border-b-[12px] border-white bg-clip-padding'; 
         
         let html = '';
         for(let i = 0; i < cantidad; i++) {
-            html += `<tr class="fila-pie hover:bg-slate-50">`;
-            html += `<tr class="fila-pie hover:bg-slate-700/50">`;
+            html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
             
             html += `
-                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1">
-                    <select class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center text-slate-700 focus:ring-1 focus:ring-blue-500 outline-none">
-                    <select class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none">
-                        <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
-                    </select>
-                </td>
+                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
             `;
 
             if(i === 0) {
                 html += `
-                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-200 bg-slate-50">
-                        <input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-pie hilos-pie font-bold focus:ring-1 focus:ring-blue-500 outline-none">
-                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-700 bg-slate-900/50">
-                        <input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-slate-200 rounded-sm text-center input-pie hilos-pie font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
+                        </select>
                     </td>
-                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-800 total-hilos-row bg-slate-50 border-r border-slate-200 text-xs">0</td>
-                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-200 total-hilos-row bg-slate-900/50 border-r border-slate-700 text-xs">0</td>
+                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                        <input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie hilos-pie font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </td>
+                    <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-hilos-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>
                 `;
             }
 
             html += `
-                <td class="p-1"><input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-pie peso-pie focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
-                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center font-bold text-slate-800 focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center input-pie peso-pie focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1 text-center font-bold text-slate-400 lbs-est-row text-xs">0</td>
-                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center font-bold focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
             `;
 
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-1 align-middle text-center"><button type="button" class="text-slate-400 hover:text-red-500 font-black text-lg btn-delete-grupo">×</button></td>`;
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center">
+                    <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
+                        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>`;
             }
 
             html += `</tr>`;
@@ -338,50 +287,43 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function generarGrupoTrama(cantidad) {
         let tbody = document.createElement('tbody');
-        tbody.className = 'grupo-trama border-b-4 border-slate-100';
-        tbody.className = 'grupo-trama border-b-4 border-slate-900';
+        tbody.className = 'grupo-trama border-b-[12px] border-white bg-clip-padding';
         
         let html = '';
         for(let i = 0; i < cantidad; i++) {
-            html += `<tr class="fila-trama hover:bg-slate-50">`;
-            html += `<tr class="fila-trama hover:bg-slate-700/50">`;
+            html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
             
             html += `
-                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Material" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="text" placeholder="Color" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 placeholder-slate-500 rounded-sm focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1"><input type="number" min="1" value="1" class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1">
-                    <select class="w-full px-1 py-1 text-xs border border-slate-300 rounded-sm text-center text-slate-700 focus:ring-1 focus:ring-blue-500 outline-none">
-                    <select class="w-full px-1 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center focus:ring-1 focus:ring-blue-500 outline-none">
-                        <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
-                    </select>
-                </td>
+                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
             `;
 
             if(i === 0) {
                 html += `
-                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-200 bg-slate-50">
-                        <input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center input-trama onzas-trama font-bold focus:ring-1 focus:ring-blue-500 outline-none">
-                    <td rowspan="${cantidad}" class="p-1 align-middle border-l border-slate-700 bg-slate-900/50">
-                        <input type="number" step="0.001" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-slate-200 rounded-sm text-center input-trama onzas-trama font-bold focus:ring-1 focus:ring-blue-500 outline-none">
+                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
+                        </select>
                     </td>
-                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-800 total-pasadas-row bg-slate-50 border-r border-slate-200 text-xs">0</td>
-                    <td rowspan="${cantidad}" class="p-1 align-middle text-center font-bold text-slate-200 total-pasadas-row bg-slate-900/50 border-r border-slate-700 text-xs">0</td>
                 `;
             }
 
             html += `
-                <td class="p-1 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
-                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-sm text-center font-bold text-slate-800 focus:ring-1 focus:ring-blue-500 outline-none"></td>
-                <td class="p-1 text-center font-bold text-slate-400 lbs-est-trama-row text-xs">0</td>
-                <td class="p-1"><input type="number" step="0.01" class="w-full px-2 py-1 text-xs border border-slate-600 bg-slate-900 text-slate-200 rounded-sm text-center font-bold focus:ring-1 focus:ring-blue-500 outline-none"></td>
+                <td class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                    <input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                </td>
+                <td class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>
+                <td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
             `;
 
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-1 align-middle text-center"><button type="button" class="text-slate-400 hover:text-red-500 font-black text-lg btn-delete-grupo">×</button></td>`;
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center">
+                    <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
+                        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>`;
             }
 
             html += `</tr>`;
@@ -419,14 +361,14 @@ document.addEventListener("DOMContentLoaded", function() {
         let suma_pasadas_total = 0; let suma_lbs_total = 0;
 
         grupos.forEach(grupo => {
-            let onzas = parseFloat(grupo.querySelector('.onzas-trama').value) || 0;
-            let total_pasadas_grupo = onzas * current_sqft;
-            grupo.querySelector('.total-pasadas-row').innerText = total_pasadas_grupo.toFixed(2);
-            suma_pasadas_total += total_pasadas_grupo;
-
             let filas = grupo.querySelectorAll('.fila-trama');
             filas.forEach(fila => {
-                let lbs_estimadas = Math.ceil(total_pasadas_grupo / 16); 
+                let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0;
+                let total_pasadas_fila = onzas * current_sqft;
+                fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2);
+                suma_pasadas_total += total_pasadas_fila;
+
+                let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); 
                 fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas;
                 suma_lbs_total += lbs_estimadas;
             });

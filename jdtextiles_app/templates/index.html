@@ -7,40 +7,40 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     
     <!-- Tarjeta de ejemplo 1 -->
-    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">Órdenes Activas</h3>
-        <p class="text-3xl font-bold text-gray-800 mt-2">12</p>
+    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-wider">Órdenes Activas</h3>
+        <p class="text-3xl font-bold text-slate-800 mt-2">12</p>
     </div>
 
     <!-- Tarjeta de ejemplo 2 -->
-    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">En Telar</h3>
-        <p class="text-3xl font-bold text-gray-800 mt-2">5</p>
+    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-wider">En Telar</h3>
+        <p class="text-3xl font-bold text-slate-800 mt-2">5</p>
     </div>
 
     <!-- Tarjeta de ejemplo 3 -->
-    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
-        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">En Terminados</h3>
-        <p class="text-3xl font-bold text-gray-800 mt-2">3</p>
+    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-wider">En Terminados</h3>
+        <p class="text-3xl font-bold text-slate-800 mt-2">3</p>
     </div>
 
     <!-- Tarjeta de ejemplo 4 -->
-    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-        <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider">Listas para Envío</h3>
-        <p class="text-3xl font-bold text-gray-800 mt-2">4</p>
+    <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
+        <h3 class="text-slate-500 text-sm font-bold uppercase tracking-wider">Listas para Envío</h3>
+        <p class="text-3xl font-bold text-slate-800 mt-2">4</p>
     </div>
 </div>
 
-<div class="mt-8 bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
-        <h3 class="text-lg font-bold uppercase tracking-wider">Órdenes en Producción</h3>
+<div class="mt-8 bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
+    <div class="bg-slate-50 text-slate-800 px-6 py-4 flex justify-between items-center border-b border-slate-200">
+        <h3 class="text-lg font-bold uppercase tracking-wider text-slate-700">Órdenes en Producción</h3>
         <span class="bg-blue-500 text-xs py-1 px-3 rounded-full shadow">{{ ordenes|length }} Total</span>
     </div>
     
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-gray-100 text-gray-700 uppercase text-sm border-b">
+                <tr class="bg-slate-100 text-slate-600 uppercase text-sm border-b border-slate-200">
                     <th class="p-4">P.O. Number</th>
                     <th class="p-4">Cliente</th>
                     <th class="p-4">Diseño</th>
@@ -49,27 +49,27 @@
                     <th class="p-4 text-center">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-600">
+            <tbody class="text-slate-700">
                 <!-- Iniciamos un ciclo (Loop) mágico de Django -->
                 {% for orden in ordenes %}
-                <tr class="border-b hover:bg-blue-50 transition duration-150">
-                    <td class="p-4 font-bold text-blue-700">{{ orden.po_number }}</td>
+                <tr class="border-b border-slate-100 hover:bg-slate-50 transition duration-150">
+                    <td class="p-4 font-bold text-blue-600">{{ orden.po_number }}</td>
                     <td class="p-4">{{ orden.cliente }}</td>
                     <td class="p-4">{{ orden.diseno }}</td>
                     <td class="p-4">
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full uppercase">
+                        <span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold px-3 py-1 rounded-full uppercase">
                             {{ orden.tipo }}
                         </span>
                     </td>
                     <td class="p-4">{{ orden.fecha_creacion|date:"d M Y" }}</td>
                     <td class="p-4 text-center">
-                        <a href="{% url 'ficha_orden' orden.id %}" class="text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm shadow font-medium">Ver Ficha</a>
+                        <a href="{% url 'ficha_orden' orden.id %}" class="text-white bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-sm shadow font-medium transition">Ver Ficha</a>
                     </td>
                 </tr>
                 {% empty %}
                 <!-- Si la base de datos está vacía, mostramos este mensaje -->
                 <tr>
-                    <td colspan="6" class="p-10 text-center text-gray-400">
+                    <td colspan="6" class="p-10 text-center text-slate-500">
                         <p class="text-lg">No hay órdenes registradas aún en el sistema.</p>
                         <p class="text-sm mt-1">Haz clic en "Ingresar Orden" en el menú para comenzar.</p>
                     </td>
