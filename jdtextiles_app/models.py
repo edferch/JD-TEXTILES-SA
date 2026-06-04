@@ -39,6 +39,24 @@ class OrdenTrabajo(models.Model):
 
     def __str__(self):
         return f"PO: {self.po_number} - {self.cliente}"
+
+    @property
+    def dimensiones(self):
+        ancho = []
+        if self.ancho_ft:
+            ancho.append(f"{int(self.ancho_ft) if self.ancho_ft % 1 == 0 else self.ancho_ft}'")
+        if self.ancho_in:
+            ancho.append(f"{int(self.ancho_in) if self.ancho_in % 1 == 0 else self.ancho_in}\"")
+        ancho_str = " ".join(ancho) or "0'"
+
+        largo = []
+        if self.largo_ft:
+            largo.append(f"{int(self.largo_ft) if self.largo_ft % 1 == 0 else self.largo_ft}'")
+        if self.largo_in:
+            largo.append(f"{int(self.largo_in) if self.largo_in % 1 == 0 else self.largo_in}\"")
+        largo_str = " ".join(largo) or "0'"
+
+        return f"{ancho_str} x {largo_str}"
     
 class InstruccionCorreo(models.Model):
     orden = models.ForeignKey(OrdenTrabajo, on_delete=models.CASCADE, related_name='instrucciones')
