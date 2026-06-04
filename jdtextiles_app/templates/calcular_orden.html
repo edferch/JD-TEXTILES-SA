@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Cálculo a Mano: {{ orden.po_number }} - JD Textiles{% endblock %}
-{% block header %}Cálculo de Material (Telar Manual): {{ orden.po_number }}{% endblock %}
+{% block title %}Cálculo de Material: {{ orden.po_number }} - JD Textiles{% endblock %}
+{% block header %}Cálculo de Material: {{ orden.po_number }}{% endblock %}
 
 {% block content %}
 <style>
-    /* Estilos para que el PDF se vea limpio al imprimir */
     @media print {
         body { background-color: white !important; -webkit-print-color-adjust: exact; }
         nav, header, .print\:hidden, button, select { display: none !important; }
@@ -21,188 +20,240 @@
     <form method="POST" id="form-calculo" class="max-w-[1400px] mx-auto space-y-6">
         {% csrf_token %}
         
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">1. Medidas y Conversión</h3>
-                <span class="text-xs font-bold bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 shadow-sm">PO: {{ orden.po_number }}</span>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6 print:hidden">
+            <div class="bg-slate-800 px-5 py-3 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Configuración Principal</h3>
+                <span class="text-xs font-bold bg-slate-900 text-slate-300 px-3 py-1 rounded-full border border-slate-600 shadow-sm">PO: {{ orden.po_number }}</span>
             </div>
-            <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="flex items-center gap-3">
-                    <label class="text-xs font-bold text-slate-500 w-16">ANCHO:</label>
-                    <div class="flex gap-2 flex-1">
-                        <div class="relative w-1/2">
-                            <input type="number" step="any" id="ancho_ft" value="{{ orden.ancho_ft|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
-                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
+            <div class="p-4 bg-slate-50 flex flex-col md:flex-row items-center gap-4 border-b border-slate-200">
+                <label class="text-sm font-bold text-slate-700 uppercase tracking-widest">⚙️ Tecnología de Producción:</label>
+                <select id="selector_tecnologia" name="metodo_produccion" class="py-2 px-4 border-2 border-blue-400 rounded-lg shadow-sm font-black text-blue-900 bg-blue-50 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer">
+                    <option value="MANO">TELAR MANUAL (A Mano)</option>
+                    <option value="SOMET">MÁQUINA - SOMET</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="seccion_mano" class="space-y-6 transition-all duration-500">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">1. Medidas y Conversión (Manual)</h3>
+                </div>
+                <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-center gap-3">
+                        <label class="text-xs font-bold text-slate-500 w-16">ANCHO:</label>
+                        <div class="flex gap-2 flex-1">
+                            <div class="relative w-1/2">
+                                <input type="number" id="ancho_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none input-calc">
+                                <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
+                            </div>
+                            <div class="relative w-1/2">
+                                <input type="number" id="ancho_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none input-calc">
+                                <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
+                            </div>
                         </div>
-                        <div class="relative w-1/2">
-                            <input type="number" step="any" id="ancho_in" value="{{ orden.ancho_in|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
-                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <label class="text-xs font-bold text-slate-500 w-16">LARGO:</label>
+                        <div class="flex gap-2 flex-1">
+                            <div class="relative w-1/2">
+                                <input type="number" id="largo_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none input-calc">
+                                <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
+                            </div>
+                            <div class="relative w-1/2">
+                                <input type="number" id="largo_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none input-calc">
+                                <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-4 bg-blue-50 p-3 border border-blue-200 rounded-lg shadow-inner">
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold text-blue-800 uppercase">Total Área</p>
+                            <p id="display_pulgadas" class="text-[10px] text-blue-600 font-mono">0" x 0"</p>
+                        </div>
+                        <div class="text-3xl font-black text-blue-700" id="display_sqft">0.00</div>
+                        <div class="text-xs font-bold text-blue-800">SQ.F.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">2. Parámetros de Telar y Urdido</h3>
+                </div>
+                <div class="p-5 flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-1/3 space-y-4 pr-6 lg:border-r border-slate-200">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-500">PEINE:</label>
+                            <input type="text" name="peine" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm outline-none">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-500">HILOS X PLG:</label>
+                            <input type="text" name="hilos_plg" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm outline-none">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-500">POR PÚA:</label>
+                            <input type="text" name="por_pua" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm outline-none">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-500" title="Largo para Urdir">LARGO URDIR:</label>
+                            <input type="text" id="largo_urdir" name="largo_urdir" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm outline-none">
+                        </div>
+                    </div>
+                    <div class="lg:w-2/3 flex flex-col justify-center">
+                        <div class="flex flex-wrap items-end gap-5 mb-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Estilo</label>
+                                <select id="tipo_patron" class="py-2 px-3 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm font-bold shadow-sm outline-none input-patron">
+                                    <option value="LISO">Liso</option>
+                                    <option value="DISENO">Diseño</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Ganancia (IN)</label>
+                                <input type="number" id="ganancia_pulgadas" class="w-24 py-2 px-3 border border-slate-300 bg-white rounded-lg text-sm text-center shadow-sm outline-none input-patron">
+                            </div>
+                            <div id="div_repeticiones" class="hidden">
+                                <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
+                                <input type="number" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm outline-none input-patron">
+                            </div>
+                            <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-md flex items-center gap-4">
+                                <label class="text-xs font-bold uppercase text-slate-300">Total Pies:</label>
+                                <input type="number" id="pies_urdir" class="w-20 bg-transparent text-blue-400 text-xl font-black text-center outline-none input-pie" readonly>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <label class="text-xs font-bold text-slate-500 w-16">LARGO:</label>
-                    <div class="flex gap-2 flex-1">
-                        <div class="relative w-1/2">
-                            <input type="number" step="any" id="largo_ft" value="{{ orden.largo_ft|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
-                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
-                        </div>
-                        <div class="relative w-1/2">
-                            <input type="number" step="any" id="largo_in" value="{{ orden.largo_in|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
-                            <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
-                        </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Material en Pie</h3>
+                    <div class="flex gap-2 print:hidden">
+                        <select id="select-compuestos-pie" class="py-1.5 px-3 border border-slate-300 rounded-md text-xs font-bold shadow-sm outline-none"><option value="1">Sencillo (1)</option><option value="2">Doble (2)</option><option value="3">Triple (3)</option></select>
+                        <button type="button" id="btn-agregar-pie" class="bg-blue-50 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md border border-blue-200">+ Añadir</button>
                     </div>
                 </div>
-                <div class="flex items-center justify-end gap-4 bg-blue-50 p-3 border border-blue-200 rounded-lg shadow-inner">
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-blue-800 uppercase">Total Área</p>
-                        <p id="display_pulgadas" class="text-[10px] text-blue-600 font-mono">0" x 0"</p>
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-pie">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                <th class="p-1 w-48">Material</th><th class="p-1 w-32">Color</th><th class="p-1 text-center w-16">Unds</th><th class="p-1 text-center w-16">Torc</th><th class="p-1 text-center w-20">Hilos/Pie</th><th class="p-1 text-center w-24">Total Hilos</th><th class="p-1 text-center w-24">Peso Indv.</th><th class="p-1 text-center w-20">Lbs Est.</th><th class="p-1 text-center w-24">Lbs Final</th><th class="p-1 text-center w-8 print:hidden"></th>
+                            </tr>
+                        </thead>
+                        <tfoot id="tfoot-pie">
+                            <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Pie:</td><td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_hilos">0</td><td></td><td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_lbs">0</td><td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">4. Material en Trama</h3>
+                    <div class="flex gap-2 print:hidden">
+                        <select id="select-compuestos-trama" class="py-1.5 px-3 border border-slate-300 rounded-md text-xs font-bold shadow-sm outline-none"><option value="1">Sencillo (1)</option><option value="2">Doble (2)</option><option value="3">Triple (3)</option></select>
+                        <button type="button" id="btn-agregar-trama" class="bg-blue-50 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md border border-blue-200">+ Añadir</button>
                     </div>
-                    <div class="text-3xl font-black text-blue-700" id="display_sqft">0.00</div>
-                    <div class="text-xs font-bold text-blue-800">SQ.F.</div>
+                </div>
+                <div class="overflow-x-auto p-4">
+                     <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-trama">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                <th class="p-1 w-48">Material</th><th class="p-1 w-32">Color</th><th class="p-1 text-center w-16">Unds</th><th class="p-1 text-center w-16">Torc</th><th class="p-1 text-center w-24">Oz/SQF</th><th class="p-1 text-center w-24">Total Pasadas</th><th class="p-1 text-center w-20">Lbs Est.</th><th class="p-1 text-center w-24">Lbs Final</th><th class="p-1 text-center w-8 print:hidden"></th>
+                            </tr>
+                        </thead>
+                        <tfoot id="tfoot-trama">
+                            <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Trama:</td><td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_pasadas">0</td><td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_lbs">0</td><td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">2. Parámetros de Telar y Urdido</h3>
-            </div>
+        <div id="seccion_somet" class="space-y-6 hidden transition-all duration-500">
             
-            <div class="p-5 flex flex-col lg:flex-row gap-6">
-                <div class="lg:w-1/3 space-y-4 pr-6 lg:border-r border-slate-200">
-                    <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-500">PEINE:</label>
-                        <input type="text" name="peine" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-500">HILOS X PLG:</label>
-                        <input type="text" name="hilos_plg" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-500">POR PÚA:</label>
-                        <input type="text" name="por_pua" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <label class="text-xs font-bold text-slate-500" title="Largo para Urdir">LARGO URDIR:</label>
-                        <input type="text" id="largo_urdir" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                    </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Parámetros SOMET</h3>
                 </div>
-
-                <div class="lg:w-2/3 flex flex-col justify-center">
-                    <div class="flex flex-wrap items-end gap-5 mb-3">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Estilo</label>
-                            <select id="tipo_patron" class="py-2 px-3 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm font-bold shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
-                                <option value="LISO">Liso</option>
-                                <option value="DISENO">Diseño</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Ganancia (IN)</label>
-                            <input type="number" id="ganancia_pulgadas" class="w-24 py-2 px-3 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
-                        </div>
-                        <div id="div_repeticiones" class="hidden">
-                            <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
-                            <input type="number" step="any" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
-                        </div>
-                        
-                        <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-md border border-slate-700 flex items-center gap-4">
-                            <label class="text-xs font-bold uppercase text-slate-300">Total Pies:</label>
-                            <input type="number" id="pies_urdir" class="w-20 bg-transparent text-blue-400 text-xl font-black text-center outline-none input-pie" readonly>
-                        </div>
+                <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-6 bg-white">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Agujas</label>
+                        <input type="number" step="0.01" name="somet_altura_agujas" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Tejido</label>
+                        <input type="number" step="0.01" name="somet_altura_tejido" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Yardas Tejidas</label>
+                        <input type="number" step="0.01" id="somet_yardas" name="somet_yardas" class="w-full py-2 px-3 border border-blue-400 bg-blue-50 rounded-lg text-sm font-bold text-blue-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm somet-input" placeholder="0.00">
+                    </div>
+                    <div class="bg-slate-800 text-white p-3 rounded-lg shadow-inner flex flex-col justify-center items-center">
+                        <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Metros Tejidos (+0.5)</span>
+                        <span id="somet_metros_tejidos" class="text-2xl font-black text-blue-400 mt-1">0.00</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Material en Pie</h3>
-                <div class="flex gap-2 print:hidden">
-                    <select id="select-compuestos-pie" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
-                        <option value="1">Sencillo (1)</option>
-                        <option value="2">Doble (2)</option>
-                        <option value="3">Triple (3)</option>
-                    </select>
-                    <button type="button" id="btn-agregar-pie" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md shadow-sm transition-colors border border-blue-200">+ Añadir</button>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Cálculo de Hilo (4 Posiciones)</h3>
                 </div>
-            </div>
-            
-            <div class="overflow-x-auto p-4">
-                <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-pie">
-                    <thead>
-                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
-                            <th class="p-1 w-48">Material</th>
-                            <th class="p-1 w-32">Color</th>
-                            <th class="p-1 text-center w-16">Unds</th>
-                            <th class="p-1 text-center w-16">Torc</th>
-                            <th class="p-1 text-center w-20">Hilos/Pie</th>
-                            <th class="p-1 text-center w-24">Total Hilos</th>
-                            <th class="p-1 text-center w-24">Peso Indv.</th>
-                            <th class="p-1 text-center w-20">Lbs Est.</th>
-                            <th class="p-1 text-center w-24">Lbs Final</th>
-                            <th class="p-1 text-center w-8 print:hidden"></th>
-                        </tr>
-                    </thead>
-                    <tfoot id="tfoot-pie">
-                        <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                            <td colspan="5" class="py-2 px-2 text-right uppercase">Total Pie:</td>
-                            <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_hilos">0</td>
-                            <td></td>
-                            <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_lbs">0</td>
-                            <td colspan="2"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">4. Material en Trama</h3>
-                <div class="flex gap-2 print:hidden">
-                    <select id="select-compuestos-trama" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
-                        <option value="1">Sencillo (1)</option>
-                        <option value="2">Doble (2)</option>
-                        <option value="3">Triple (3)</option>
-                    </select>
-                    <button type="button" id="btn-agregar-trama" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-1.5 text-xs font-bold rounded-md shadow-sm transition-colors border border-blue-200">+ Añadir</button>
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                <th class="p-2 w-12 text-center bg-slate-50 rounded-tl-lg">Pos</th>
+                                <th class="p-2 w-48">Color / Material</th>
+                                <th class="p-2 text-center w-24">Repetición</th>
+                                <th class="p-2 text-center w-24">Quesos</th>
+                                <th class="p-2 text-center w-24 bg-slate-50">Tot. Quesos</th>
+                                <th class="p-2 text-center w-24 border-l border-slate-200">% Consumo</th>
+                                <th class="p-2 text-center w-24 bg-slate-50">Gasto Hilo</th>
+                                <th class="p-2 text-center w-24 bg-slate-50">Mts/Queso</th>
+                                <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
+                                <th class="p-2 text-center w-24 bg-blue-50 text-blue-800 rounded-tr-lg">Lbs Finales</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-somet">
+                            {% for i in "1234" %}
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-somet">
+                                <td class="p-2 text-center font-black text-slate-400 bg-slate-50/50">{{ i }}</td>
+                                <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none somet-color" placeholder="Nombre de hilo"></td>
+                                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-rep" placeholder="0"></td>
+                                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-quesos" placeholder="0"></td>
+                                <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-tot-quesos">0</td>
+                                
+                                <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-blue-200 rounded-md text-center shadow-sm outline-none somet-input somet-pct" placeholder="%"></td>
+                                <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 somet-gasto">0.00</td>
+                                <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-mtsq">0.00</td>
+                                
+                                <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-nm" placeholder="0"></td>
+                                <td class="p-2 text-center font-black text-blue-700 bg-blue-50/50 text-sm somet-lbs">0</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                <td colspan="9" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Somet:</td>
+                                <td class="py-3 px-2 text-center text-blue-700 text-lg" id="somet_gran_total_lbs">0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-            </div>
-
-            <div class="overflow-x-auto p-4">
-                 <table class="w-full text-left border-collapse min-w-[900px]" id="tabla-trama">
-                    <thead>
-                        <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
-                            <th class="p-1 w-48">Material</th>
-                            <th class="p-1 w-32">Color</th>
-                            <th class="p-1 text-center w-16">Unds</th>
-                            <th class="p-1 text-center w-16">Torc</th>
-                            <th class="p-1 text-center w-24">Oz/SQF</th>
-                            <th class="p-1 text-center w-24">Total Pasadas</th>
-                            <th class="p-1 text-center w-20">Lbs Est.</th>
-                            <th class="p-1 text-center w-24">Lbs Final</th>
-                            <th class="p-1 text-center w-8 print:hidden"></th>
-                        </tr>
-                    </thead>
-                    <tfoot id="tfoot-trama">
-                        <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                            <td colspan="5" class="py-2 px-2 text-right uppercase">Total Trama:</td>
-                            <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_pasadas">0</td>
-                            <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_lbs">0</td>
-                            <td colspan="2"></td>
-                        </tr>
-                    </tfoot>
-                </table>
             </div>
         </div>
 
         <input type="hidden" name="hidden_sq_ft" id="hidden_sq_ft">
         <input type="hidden" name="datos_pie_json" id="datos_pie_json">
         <input type="hidden" name="datos_trama_json" id="datos_trama_json">
-
-        <div class="flex justify-end gap-4 mt-8 pb-10 print:hidden">
+        <input type="hidden" name="datos_somet_json" id="datos_somet_json"> <div class="flex justify-end gap-4 mt-8 pb-10 print:hidden">
             <button type="button" onclick="window.print()" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-8 rounded-lg shadow-md transition-colors">Guardar Cálculo Oficial</button>
         </div>
@@ -212,6 +263,85 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     
+    // ==========================================
+    // CAMBIO DE TECNOLOGÍA (MANO VS SOMET)
+    // ==========================================
+    const selectorTecnologia = document.getElementById('selector_tecnologia');
+    const seccionMano = document.getElementById('seccion_mano');
+    const seccionSomet = document.getElementById('seccion_somet');
+
+    function toggleTecnologia() {
+        if (selectorTecnologia.value === 'MANO') {
+            seccionMano.classList.remove('hidden');
+            seccionSomet.classList.add('hidden');
+        } else if (selectorTecnologia.value === 'SOMET') {
+            seccionMano.classList.add('hidden');
+            seccionSomet.classList.remove('hidden');
+        }
+    }
+
+    selectorTecnologia.addEventListener('change', toggleTecnologia);
+    toggleTecnologia(); // Ejecutar al cargar
+
+    // ==========================================
+    // MOTOR MATEMÁTICO MÁQUINA (SOMET)
+    // ==========================================
+    let metros_tejidos_somet = 0;
+
+    function calcularSomet() {
+        // 1. Calcular metros
+        let yardas = parseFloat(document.getElementById('somet_yardas').value) || 0;
+        if (yardas > 0) {
+            metros_tejidos_somet = (yardas * 0.9144) + 0.5;
+        } else {
+            metros_tejidos_somet = 0;
+        }
+        document.getElementById('somet_metros_tejidos').innerText = metros_tejidos_somet.toFixed(2);
+
+        // 2. Calcular filas (4 posiciones)
+        let total_lbs = 0;
+        document.querySelectorAll('.fila-somet').forEach(fila => {
+            let rep = parseFloat(fila.querySelector('.somet-rep').value) || 0;
+            let quesos = parseFloat(fila.querySelector('.somet-quesos').value) || 0;
+            let pct = parseFloat(fila.querySelector('.somet-pct').value) || 0;
+            let nm = parseFloat(fila.querySelector('.somet-nm').value) || 0;
+
+            // A) Total Quesos
+            let tot_quesos = rep * quesos;
+            fila.querySelector('.somet-tot-quesos').innerText = tot_quesos.toFixed(2);
+
+            // B) Gasto Hilo según umbrales de la fábrica
+            let gasto = 0;
+            if (pct > 0 && pct <= 10) gasto = 2.75;
+            else if (pct > 10 && pct <= 25) gasto = 3.75;
+            else if (pct > 25) gasto = 4.5;
+            fila.querySelector('.somet-gasto').innerText = gasto.toFixed(2);
+
+            // C) Metros / Queso
+            let mts_queso = metros_tejidos_somet * gasto;
+            fila.querySelector('.somet-mtsq').innerText = mts_queso.toFixed(2);
+
+            // D) Libras (Fórmula Maestra)
+            let lbs = 0;
+            if (nm > 0 && tot_quesos > 0) {
+                let formula = (((tot_quesos * mts_queso) / nm) / 1000) * 2.2046;
+                lbs = Math.ceil(formula + 1); // Suma 1 y aproxima a mayor
+            }
+            fila.querySelector('.somet-lbs').innerText = lbs;
+            total_lbs += lbs;
+        });
+
+        document.getElementById('somet_gran_total_lbs').innerText = total_lbs;
+    }
+
+    // Escuchar inputs de Somet
+    document.querySelectorAll('.somet-input, .somet-calc').forEach(input => {
+        input.addEventListener('input', calcularSomet);
+    });
+
+    // ==========================================
+    // MOTOR MATEMÁTICO TELAR MANUAL (Intacto)
+    // ==========================================
     let current_sqft = 0;
     let ancho_total_in = 0;
 
@@ -220,15 +350,11 @@ document.addEventListener("DOMContentLoaded", function() {
         let a_in = parseFloat(document.getElementById('ancho_in').value) || 0;
         let l_ft = parseFloat(document.getElementById('largo_ft').value) || 0;
         let l_in = parseFloat(document.getElementById('largo_in').value) || 0;
-
         ancho_total_in = (a_ft * 12) + a_in;
         let total_largo_in = (l_ft * 12) + l_in;
-
         current_sqft = (ancho_total_in * total_largo_in) / 144;
-        
         document.getElementById('display_sqft').innerText = current_sqft.toFixed(3);
         document.getElementById('display_pulgadas').innerText = ancho_total_in + '\" x ' + total_largo_in + '\"';
-        
         calcularReglaPatron();
         calcularTrama();
     }
@@ -238,7 +364,6 @@ document.addEventListener("DOMContentLoaded", function() {
         let ganancia = parseFloat(document.getElementById('ganancia_pulgadas').value) || 0;
         let ancho_con_ganancia = ancho_total_in + ganancia;
         let total_base = 0;
-
         if (tipo === 'LISO') {
             document.getElementById('div_repeticiones').classList.add('hidden');
             total_base = ancho_con_ganancia;
@@ -247,7 +372,6 @@ document.addEventListener("DOMContentLoaded", function() {
             let repeticiones = parseFloat(document.getElementById('repeticiones').value) || 1;
             total_base = Math.ceil(ancho_con_ganancia / repeticiones);
         }
-
         document.getElementById('pies_urdir').value = total_base;
         calcularPie(); 
     }
@@ -255,20 +379,14 @@ document.addEventListener("DOMContentLoaded", function() {
     function generarGrupoPie(cantidad) {
         let tbody = document.createElement('tbody');
         tbody.className = 'grupo-pie border-b-[12px] border-white bg-clip-padding'; 
-        
         let html = '';
         for(let i = 0; i < cantidad; i++) {
-            html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
-            
-            html += `
+            html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">
                 <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
                 <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
-                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>
-            `;
-
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
             if(i === 0) {
-                html += `
-                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
                         <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
                             <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
                         </select>
@@ -276,24 +394,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
                         <input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie hilos-pie font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </td>
-                    <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-hilos-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>
-                `;
+                    <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-hilos-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`;
             }
-
-            html += `
-                <td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+            html += `<td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
                 <td class="p-2 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
-                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>
-            `;
-
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden">
-                    <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
-                        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </td>`;
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`;
             }
-
             html += `</tr>`;
         }
         tbody.innerHTML = html;
@@ -303,44 +411,28 @@ document.addEventListener("DOMContentLoaded", function() {
     function generarGrupoTrama(cantidad) {
         let tbody = document.createElement('tbody');
         tbody.className = 'grupo-trama border-b-[12px] border-white bg-clip-padding';
-        
         let html = '';
         for(let i = 0; i < cantidad; i++) {
-            html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
-            
-            html += `
+            html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">
                 <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
                 <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
-                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>
-            `;
-
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
             if(i === 0) {
-                html += `
-                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
                         <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
                             <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
                         </select>
                     </td>
-                `;
+                    <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
+                        <input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </td>
+                    <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`;
             }
-
-            html += `
-                <td class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                    <input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                </td>
-                <td class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>
-                <td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
-                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>
-            `;
-
+            html += `<td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden">
-                    <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
-                        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </td>`;
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`;
             }
-
             html += `</tr>`;
         }
         tbody.innerHTML = html;
@@ -351,13 +443,11 @@ document.addEventListener("DOMContentLoaded", function() {
         let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0;
         let grupos = document.querySelectorAll('.grupo-pie');
         let suma_hilos_total = 0; let suma_lbs_total = 0;
-
         grupos.forEach(grupo => {
             let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0;
             let total_hilos_grupo = hilos_pie * pies_urdir;
             grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2);
             suma_hilos_total += total_hilos_grupo;
-
             let filas = grupo.querySelectorAll('.fila-pie');
             filas.forEach(fila => {
                 let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0;
@@ -366,7 +456,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 suma_lbs_total += lbs_estimadas;
             });
         });
-
         document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2);
         document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_total;
     }
@@ -374,7 +463,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function calcularTrama() {
         let grupos = document.querySelectorAll('.grupo-trama');
         let suma_pasadas_total = 0; let suma_lbs_total = 0;
-
         grupos.forEach(grupo => {
             let filas = grupo.querySelectorAll('.fila-trama');
             filas.forEach(fila => {
@@ -382,18 +470,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 let total_pasadas_fila = onzas * current_sqft;
                 fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2);
                 suma_pasadas_total += total_pasadas_fila;
-
                 let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); 
                 fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas;
                 suma_lbs_total += lbs_estimadas;
             });
         });
-
         document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2);
         document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_total;
     }
 
-    // Inicialización y Eventos
     document.getElementById('tabla-pie').insertBefore(generarGrupoPie(1), document.getElementById('tfoot-pie'));
     document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(1), document.getElementById('tfoot-trama'));
 
@@ -417,19 +502,15 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea));
     document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
 
-    // Calcular área automáticamente al cargar la página con los datos pre-rellenados
-    calcularArea();
-
-    // === RECOLECTAR DATOS AL PRESIONAR "GUARDAR" ===
+    // ==========================================
+    // RECOLECTOR JSON AL GUARDAR
+    // ==========================================
     document.getElementById('form-calculo').addEventListener('submit', function(e) {
-        
-        // SQ.F. total
         document.getElementById('hidden_sq_ft').value = current_sqft.toFixed(3);
 
-        // Empaquetar PIE
         let arrPie = [];
         document.querySelectorAll('.fila-pie').forEach(fila => {
-            let material = fila.querySelector('.mat-nombre').value;
+            let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
             if(material.trim() !== '') {
                 arrPie.push({
                     material: material,
@@ -443,10 +524,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         document.getElementById('datos_pie_json').value = JSON.stringify(arrPie);
 
-        // Empaquetar TRAMA
         let arrTrama = [];
         document.querySelectorAll('.fila-trama').forEach(fila => {
-            let material = fila.querySelector('.mat-nombre').value;
+            let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
             if(material.trim() !== '') {
                 arrTrama.push({
                     material: material,
@@ -459,8 +539,26 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         document.getElementById('datos_trama_json').value = JSON.stringify(arrTrama);
-    });
 
+        // Novedad: Recolectar datos SOMET si está activo
+        let arrSomet = [];
+        if (selectorTecnologia.value === 'SOMET') {
+            document.querySelectorAll('.fila-somet').forEach(fila => {
+                let color = fila.querySelector('.somet-color').value;
+                if(color.trim() !== '') {
+                    arrSomet.push({
+                        color: color,
+                        repeticiones: fila.querySelector('.somet-rep').value,
+                        quesos: fila.querySelector('.somet-quesos').value,
+                        porcentaje: fila.querySelector('.somet-pct').value,
+                        nm: fila.querySelector('.somet-nm').value,
+                        lbs_final: fila.querySelector('.somet-lbs').innerText
+                    });
+                }
+            });
+        }
+        document.getElementById('datos_somet_json').value = JSON.stringify(arrSomet);
+    });
 });
 </script>
 {% endblock %}
