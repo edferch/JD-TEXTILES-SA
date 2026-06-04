@@ -3,6 +3,11 @@ from django.contrib.auth.decorators import login_required   #importa el candado
 from .forms import OrdenTrabajoForm, InstruccionForm, CalculoMaterialForm
 from .models import OrdenTrabajo, InstruccionCorreo
 
+import json
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import OrdenTrabajo, CalculoMaterial
+
 @login_required(login_url='login')  # Esto asegura que solo los usuarios logueados puedan ver esta vista
 def dashboard_principal(request):
     #Traer ordenes de PostgreSQL
@@ -71,15 +76,29 @@ def calcular_orden(request, orden_id):
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
     
     if request.method == 'POST':
-        form = CalculoMaterialForm(request.POST)
-        if form.is_valid():
-            calculo = form.save(commit=False)
-            calculo.orden = orden
-            calculo.creado_por = request.user
-            calculo.save()
-            return redirect('panel_calculo') # Lo regresamos a la lista
-    else:
-        # El formulario inicia vacío, pero si la orden es de MANO, lo preseleccionamos
-        form = CalculoMaterialForm(initial={'metodo': orden.tipo})
+        # 1. Obtenemos las cajas de texto estáticas usando el atributo 'name'
+        peine = request.POST.get('peine', '')
+        hilos_plg = request.POST.get('hilos_plg', '')
+        por_pua = request.POST.get('por_pua', '')
+        sq_ft = request.POST.get('hidden_sq_ft', '0')
         
-    return render(request, 'calcular_orden.html', {'form': form, 'orden': orden})
+        # 2. Obtenemos todas las filas dinámicas de Pie y Trama empaquetadas en JSON
+        datos_pie = request.POST.get('datos_pie_json', '[]')
+        datos_trama = request.POST.get('datos_trama_json', '[]')
+        
+        # 3. Guardamos o actualizamos la base de datos
+        calculo, creado = CalculoMaterial.objects.get_or_create(orden=orden)
+        calculo.metodo = 'MANO'
+        calculo.peine = peine
+        calculo.hilos_por_pulgada = hilos_plg
+        calculo.por_diente = por_pua
+        calculo.sq_ft = sq_ft
+        calculo.material_pie = datos_pie     # Se guarda como texto JSON
+        calculo.material_trama = datos_trama # Se guarda como texto JSON
+        calculo.creado_por = request.user
+        calculo.save()
+        
+        # Redirigir al calculista a su bandeja de entrada
+        return redirect('panel_calculo')
+        
+    return render(request, 'calcular_orden.html', {'orden': orden})

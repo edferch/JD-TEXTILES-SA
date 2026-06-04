@@ -4,6 +4,18 @@
 {% block header %}Cálculo de Material (Telar Manual): {{ orden.po_number }}{% endblock %}
 
 {% block content %}
+<style>
+    /* Estilos para que el PDF se vea limpio al imprimir */
+    @media print {
+        body { background-color: white !important; -webkit-print-color-adjust: exact; }
+        nav, header, .print\:hidden, button, select { display: none !important; }
+        .max-w-[1400px] { max-w: 100% !important; margin: 0 !important; border: none !important; box-shadow: none !important; }
+        input { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; }
+        .overflow-x-auto { overflow: visible !important; }
+        .bg-slate-50 { background-color: #f8fafc !important; color: #0f172a !important; }
+    }
+</style>
+
 <div class="p-4 md:p-6 min-h-screen">
     
     <form method="POST" id="form-calculo" class="max-w-[1400px] mx-auto space-y-6">
@@ -19,11 +31,11 @@
                     <label class="text-xs font-bold text-slate-500 w-16">ANCHO:</label>
                     <div class="flex gap-2 flex-1">
                         <div class="relative w-1/2">
-                            <input type="number" id="ancho_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <input type="number" step="any" id="ancho_ft" value="{{ orden.ancho_ft|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
                             <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
                         </div>
                         <div class="relative w-1/2">
-                            <input type="number" id="ancho_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <input type="number" step="any" id="ancho_in" value="{{ orden.ancho_in|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
                             <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
                         </div>
                     </div>
@@ -32,11 +44,11 @@
                     <label class="text-xs font-bold text-slate-500 w-16">LARGO:</label>
                     <div class="flex gap-2 flex-1">
                         <div class="relative w-1/2">
-                            <input type="number" id="largo_ft" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <input type="number" step="any" id="largo_ft" value="{{ orden.largo_ft|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
                             <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">FT</span>
                         </div>
                         <div class="relative w-1/2">
-                            <input type="number" id="largo_in" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
+                            <input type="number" step="any" id="largo_in" value="{{ orden.largo_in|stringformat:'s' }}" class="w-full pl-3 pr-8 py-2 border border-slate-300 bg-white text-slate-800 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-calc">
                             <span class="absolute right-2 top-2.5 text-[10px] font-bold text-slate-400">IN</span>
                         </div>
                     </div>
@@ -61,15 +73,15 @@
                 <div class="lg:w-1/3 space-y-4 pr-6 lg:border-r border-slate-200">
                     <div class="flex items-center justify-between">
                         <label class="text-xs font-bold text-slate-500">PEINE:</label>
-                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <input type="text" name="peine" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div class="flex items-center justify-between">
                         <label class="text-xs font-bold text-slate-500">HILOS X PLG:</label>
-                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <input type="text" name="hilos_plg" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div class="flex items-center justify-between">
                         <label class="text-xs font-bold text-slate-500">POR PÚA:</label>
-                        <input type="text" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <input type="text" name="por_pua" class="w-32 py-1.5 px-3 border border-slate-300 bg-white text-slate-800 rounded-md text-sm shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     </div>
                     <div class="flex items-center justify-between">
                         <label class="text-xs font-bold text-slate-500" title="Largo para Urdir">LARGO URDIR:</label>
@@ -92,7 +104,7 @@
                         </div>
                         <div id="div_repeticiones" class="hidden">
                             <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
-                            <input type="number" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
+                            <input type="number" step="any" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all input-patron">
                         </div>
                         
                         <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-md border border-slate-700 flex items-center gap-4">
@@ -107,7 +119,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
                 <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Material en Pie</h3>
-                <div class="flex gap-2">
+                <div class="flex gap-2 print:hidden">
                     <select id="select-compuestos-pie" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
                         <option value="1">Sencillo (1)</option>
                         <option value="2">Doble (2)</option>
@@ -130,7 +142,7 @@
                             <th class="p-1 text-center w-24">Peso Indv.</th>
                             <th class="p-1 text-center w-20">Lbs Est.</th>
                             <th class="p-1 text-center w-24">Lbs Final</th>
-                            <th class="p-1 text-center w-8"></th>
+                            <th class="p-1 text-center w-8 print:hidden"></th>
                         </tr>
                     </thead>
                     <tfoot id="tfoot-pie">
@@ -149,7 +161,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
                 <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">4. Material en Trama</h3>
-                <div class="flex gap-2">
+                <div class="flex gap-2 print:hidden">
                     <select id="select-compuestos-trama" class="py-1.5 px-3 border border-slate-300 bg-white text-slate-700 rounded-md text-xs font-bold outline-none shadow-sm focus:ring-2 focus:ring-blue-500">
                         <option value="1">Sencillo (1)</option>
                         <option value="2">Doble (2)</option>
@@ -171,7 +183,7 @@
                             <th class="p-1 text-center w-24">Total Pasadas</th>
                             <th class="p-1 text-center w-20">Lbs Est.</th>
                             <th class="p-1 text-center w-24">Lbs Final</th>
-                            <th class="p-1 text-center w-8"></th>
+                            <th class="p-1 text-center w-8 print:hidden"></th>
                         </tr>
                     </thead>
                     <tfoot id="tfoot-trama">
@@ -186,8 +198,12 @@
             </div>
         </div>
 
-        <div class="flex justify-end gap-4 mt-8 pb-10">
-            <button type="button" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
+        <input type="hidden" name="hidden_sq_ft" id="hidden_sq_ft">
+        <input type="hidden" name="datos_pie_json" id="datos_pie_json">
+        <input type="hidden" name="datos_trama_json" id="datos_trama_json">
+
+        <div class="flex justify-end gap-4 mt-8 pb-10 print:hidden">
+            <button type="button" onclick="window.print()" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 px-8 rounded-lg shadow-md transition-colors">Guardar Cálculo Oficial</button>
         </div>
     </form>
@@ -236,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function() {
         calcularPie(); 
     }
 
-    // Funciones de Tablas: Notarás que los inputs ahora tienen py-1 (más delgados) y border-slate-300
     function generarGrupoPie(cantidad) {
         let tbody = document.createElement('tbody');
         tbody.className = 'grupo-pie border-b-[12px] border-white bg-clip-padding'; 
@@ -246,15 +261,15 @@ document.addEventListener("DOMContentLoaded", function() {
             html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
             
             html += `
-                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
-                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
-                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
+                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>
             `;
 
             if(i === 0) {
                 html += `
                     <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
                             <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
                         </select>
                     </td>
@@ -268,11 +283,11 @@ document.addEventListener("DOMContentLoaded", function() {
             html += `
                 <td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
                 <td class="p-2 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
-                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>
             `;
 
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center">
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden">
                     <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
                         <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -294,15 +309,15 @@ document.addEventListener("DOMContentLoaded", function() {
             html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">`;
             
             html += `
-                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
-                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
-                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
+                <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
+                <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>
             `;
 
             if(i === 0) {
                 html += `
                     <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
                             <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
                         </select>
                     </td>
@@ -315,11 +330,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 </td>
                 <td class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>
                 <td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
-                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
+                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>
             `;
 
             if(i === 0) {
-                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center">
+                html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden">
                     <button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">
                         <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -391,16 +406,60 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById('tabla-pie').addEventListener('input', function(e) { if (e.target.classList.contains('input-pie')) calcularPie(); });
     document.getElementById('tabla-pie').addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); }
+        if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); }
     });
 
     document.getElementById('tabla-trama').addEventListener('input', function(e) { if (e.target.classList.contains('input-trama')) calcularTrama(); });
     document.getElementById('tabla-trama').addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); }
+        if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); }
     });
 
     document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea));
     document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
+
+    // Calcular área automáticamente al cargar la página con los datos pre-rellenados
+    calcularArea();
+
+    // === RECOLECTAR DATOS AL PRESIONAR "GUARDAR" ===
+    document.getElementById('form-calculo').addEventListener('submit', function(e) {
+        
+        // SQ.F. total
+        document.getElementById('hidden_sq_ft').value = current_sqft.toFixed(3);
+
+        // Empaquetar PIE
+        let arrPie = [];
+        document.querySelectorAll('.fila-pie').forEach(fila => {
+            let material = fila.querySelector('.mat-nombre').value;
+            if(material.trim() !== '') {
+                arrPie.push({
+                    material: material,
+                    color: fila.querySelector('.mat-color').value,
+                    unds: fila.querySelector('.mat-unds').value,
+                    torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-',
+                    peso: fila.querySelector('.peso-pie') ? fila.querySelector('.peso-pie').value : '0',
+                    lbs_final: fila.querySelector('.lbs-final-input').value 
+                });
+            }
+        });
+        document.getElementById('datos_pie_json').value = JSON.stringify(arrPie);
+
+        // Empaquetar TRAMA
+        let arrTrama = [];
+        document.querySelectorAll('.fila-trama').forEach(fila => {
+            let material = fila.querySelector('.mat-nombre').value;
+            if(material.trim() !== '') {
+                arrTrama.push({
+                    material: material,
+                    color: fila.querySelector('.mat-color').value,
+                    unds: fila.querySelector('.mat-unds').value,
+                    torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-',
+                    onzas: fila.querySelector('.onzas-trama') ? fila.querySelector('.onzas-trama').value : '0',
+                    lbs_final: fila.querySelector('.lbs-final-input').value
+                });
+            }
+        });
+        document.getElementById('datos_trama_json').value = JSON.stringify(arrTrama);
+    });
 
 });
 </script>

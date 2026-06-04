@@ -26,9 +26,9 @@
         </div>
         <div class="bg-gray-50 p-3 rounded border border-gray-100">
             <p class="text-[10px] text-blue-500 uppercase font-black tracking-widest">Dimensiones</p>
-            <p class="font-bold text-gray-800">{{ orden.dimensiones }}</p>
+            <p class="font-bold text-gray-800">{% if orden.ancho_ft %}{{ orden.ancho_ft|floatformat:"-2" }}'{% endif %} {% if orden.ancho_in %}{{ orden.ancho_in|floatformat:"-2" }}"{% endif %} x {% if orden.largo_ft %}{{ orden.largo_ft|floatformat:"-2" }}'{% endif %} {% if orden.largo_in %}{{ orden.largo_in|floatformat:"-2" }}"{% endif %}</p>
         </div>
-        <div class="bg-gray-50 p-3 rounded border border-gray-100">
+        <div class="bg-gray-50 p-3 rounded border border-gray-100">-
             <p class="text-[10px] text-blue-500 uppercase font-black tracking-widest">Fecha Ingreso</p>
             <p class="font-bold text-gray-800">{{ orden.fecha_creacion|date:"d/m/Y" }}</p>
         </div>

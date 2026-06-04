@@ -24,7 +24,11 @@ class OrdenTrabajo(models.Model):
     invoice_number = models.CharField(max_length=50, blank=True, null=True)
     cliente = models.CharField(max_length=150)
     diseno = models.CharField(max_length=150, verbose_name="Nombre del Diseño")
-    dimensiones = models.CharField(max_length=100, verbose_name="Size (Width x Length)")
+    
+    ancho_ft = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Ancho (FT)")
+    ancho_in = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Ancho (IN)")
+    largo_ft = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Largo (FT)")
+    largo_in = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name="Largo (IN)")
     
     TIPO_ALFOMBRA = [('MANO', 'A Mano'), ('MAQUINA', 'A Máquina')]
     tipo = models.CharField(max_length=10, choices=TIPO_ALFOMBRA)
