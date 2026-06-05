@@ -1,54 +1,39 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required   #importa el candado
-from .forms import OrdenTrabajoForm, InstruccionForm, CalculoMaterialForm
-from .models import OrdenTrabajo, InstruccionCorreo
-
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import OrdenTrabajo, CalculoMaterial
+from .forms import OrdenTrabajoForm, InstruccionForm, CalculoMaterialForm
+from .models import OrdenTrabajo, InstruccionCorreo, CalculoMaterial, PerfilUsuario
 
-@login_required(login_url='login')  # Esto asegura que solo los usuarios logueados puedan ver esta vista
+@login_required(login_url='login')
 def dashboard_principal(request):
-    #Traer ordenes de PostgreSQL
-    ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion') # Ordenamos por fecha de creación, la más reciente primero
-
-    #se envia a la plantilla HTML
+    ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion')
     return render(request, 'index.html', {'ordenes': ordenes})
 
 @login_required(login_url='login')
 def crear_orden(request):
-    # Si el usuario le dio clic al botón "Guardar" (POST)
     if request.method == 'POST':
-        # Recibimos los datos de texto y los archivos (la imagen del layout)
         form = OrdenTrabajoForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save() # ¡Aquí se guarda mágicamente en PostgreSQL!
-            return redirect('dashboard') # Lo regresamos a la pantalla principal
+            form.save()
+            return redirect('dashboard')
     else:
-        # Si solo está entrando a ver la página, le mostramos el formulario vacío
         form = OrdenTrabajoForm()
     
     return render(request, 'crear_orden.html', {'form': form})
 
-
 @login_required(login_url='login')
 def ficha_orden(request, orden_id):
-    # Buscamos la orden específica en la base de datos
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
-    
-    # Traemos todas las instrucciones que ya tiene esta orden
     instrucciones = orden.instrucciones.all().order_by('-fecha_registro')
     
-    # Si el usuario quiere guardar un nuevo correo
     if request.method == 'POST':
         form = InstruccionForm(request.POST)
         if form.is_valid():
             nueva_instruccion = form.save(commit=False)
-            nueva_instruccion.orden = orden # Amarramos la instrucción a esta orden
-            nueva_instruccion.creado_por = request.user # Guardamos quién lo hizo
+            nueva_instruccion.orden = orden
+            nueva_instruccion.creado_por = request.user
             nueva_instruccion.save()
-            return redirect('ficha_orden', orden_id=orden.id) # Recargamos la página
+            return redirect('ficha_orden', orden_id=orden.id)
     else:
         form = InstruccionForm()
         
@@ -60,15 +45,25 @@ def ficha_orden(request, orden_id):
 
 @login_required(login_url='login')
 def panel_tineria(request):
-    #Traer las ordenes
-    ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion') # Ordenamos por fecha de creación, la más reciente primero
-    
+    ordenes = OrdenTrabajo.objects.all().order_by('-fecha_creacion')
     return render(request, 'panel_tineria.html', {'ordenes': ordenes})
 
 @login_required(login_url='login')
 def panel_calculo(request):
-    # Magia de Django: Filtramos SOLO las órdenes que NO tienen cálculo (isnull=True)
+    try:
+        perfil = request.user.perfilusuario
+    except PerfilUsuario.DoesNotExist:
+        # Si no tiene perfil, le mostramos vacío por seguridad
+        return render(request, 'panel_calculo.html', {'ordenes': []})
+
+    # Filtramos las órdenes que NO tienen cálculo (isnull=True) Y según el rol
     ordenes_pendientes = OrdenTrabajo.objects.filter(calculo__isnull=True).order_by('fecha_creacion')
+
+    if perfil.rol_calculo == 'MANO':
+        ordenes_pendientes = ordenes_pendientes.filter(tipo='MANO')
+    elif perfil.rol_calculo == 'MAQUINA':
+        ordenes_pendientes = ordenes_pendientes.filter(tipo='MAQUINA')
+
     return render(request, 'panel_calculo.html', {'ordenes': ordenes_pendientes})
 
 @login_required(login_url='login')
@@ -76,29 +71,25 @@ def calcular_orden(request, orden_id):
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
     
     if request.method == 'POST':
-        # 1. Obtenemos las cajas de texto estáticas usando el atributo 'name'
-        peine = request.POST.get('peine', '')
-        hilos_plg = request.POST.get('hilos_plg', '')
-        por_pua = request.POST.get('por_pua', '')
-        sq_ft = request.POST.get('hidden_sq_ft', '0')
-        
-        # 2. Obtenemos todas las filas dinámicas de Pie y Trama empaquetadas en JSON
-        datos_pie = request.POST.get('datos_pie_json', '[]')
-        datos_trama = request.POST.get('datos_trama_json', '[]')
-        
-        # 3. Guardamos o actualizamos la base de datos
         calculo, creado = CalculoMaterial.objects.get_or_create(orden=orden)
-        calculo.metodo = 'MANO'
-        calculo.peine = peine
-        calculo.hilos_por_pulgada = hilos_plg
-        calculo.por_diente = por_pua
-        calculo.sq_ft = sq_ft
-        calculo.material_pie = datos_pie     # Se guarda como texto JSON
-        calculo.material_trama = datos_trama # Se guarda como texto JSON
+        calculo.metodo = orden.tipo # MANO o MAQUINA
         calculo.creado_por = request.user
-        calculo.save()
         
-        # Redirigir al calculista a su bandeja de entrada
+        # Guardar dependiendo del tipo de alfombra
+        if orden.tipo == 'MANO':
+            calculo.peine = request.POST.get('peine', '')
+            calculo.hilos_por_pulgada = request.POST.get('hilos_plg', '')
+            calculo.por_diente = request.POST.get('por_pua', '')
+            calculo.largo_urdir = request.POST.get('largo_urdir', '') # Guardamos Largo Urdir
+            calculo.sq_ft = request.POST.get('hidden_sq_ft', '0')
+            calculo.material_pie = request.POST.get('datos_pie_json', '[]')
+            calculo.material_trama = request.POST.get('datos_trama_json', '[]')
+            
+        elif orden.tipo == 'MAQUINA':
+            calculo.somet_yardas = request.POST.get('somet_yardas', '0')
+            calculo.material_somet = request.POST.get('datos_somet_json', '[]')
+            
+        calculo.save()
         return redirect('panel_calculo')
         
     return render(request, 'calcular_orden.html', {'orden': orden})

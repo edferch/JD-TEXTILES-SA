@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Opciones de departamentos para el filtrado (El inicio de nuestro RBAC)
 DEPARTAMENTOS = [
     ('CALCULO', 'Cálculo de Material'),
     ('BODEGA', 'Bodega'),
@@ -15,9 +14,17 @@ DEPARTAMENTOS = [
 class PerfilUsuario(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     departamento = models.CharField(max_length=20, choices=DEPARTAMENTOS)
+    
+    # === NUEVO: ROLES DE CÁLCULO ===
+    ROLES_CALCULO = [
+        ('MANO', 'Calculista Telar Manual'),
+        ('MAQUINA', 'Calculista Máquina (Somet/Dornier)'),
+        ('JEFE', 'Jefe / Administrador (Ve todo)'),
+    ]
+    rol_calculo = models.CharField(max_length=20, choices=ROLES_CALCULO, default='JEFE')
 
     def __str__(self):
-        return f"{self.usuario.username} - {self.departamento}"
+        return f"{self.usuario.username} - {self.get_rol_calculo_display()}"
 
 class OrdenTrabajo(models.Model):
     po_number = models.CharField(max_length=50, unique=True, verbose_name="P.O. Number")
@@ -61,9 +68,7 @@ class OrdenTrabajo(models.Model):
 class InstruccionCorreo(models.Model):
     orden = models.ForeignKey(OrdenTrabajo, on_delete=models.CASCADE, related_name='instrucciones')
     fecha_recibido = models.DateField(verbose_name="Fecha del Correo")
-    # Instrucciones resumidas para los operarios
     instrucciones_clave = models.TextField(verbose_name="Instrucciones Específicas")
-    # El correo completo como respaldo
     cuerpo_correo = models.TextField(verbose_name="Cuerpo Completo del Correo", blank=True, null=True)
     
     creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -73,7 +78,6 @@ class InstruccionCorreo(models.Model):
         return f"Instrucción {self.fecha_recibido} - PO: {self.orden.po_number}"
 
 class TrackingProduccion(models.Model):
-    # Esta tabla reemplaza el Spreadsheet de Excel
     orden = models.ForeignKey(OrdenTrabajo, on_delete=models.CASCADE, related_name='tracking')
     departamento = models.CharField(max_length=20, choices=DEPARTAMENTOS)
     
@@ -87,26 +91,24 @@ class TrackingProduccion(models.Model):
         return f"{self.orden.po_number} - {self.departamento} ({self.estado})"
     
 class CalculoMaterial(models.Model):
-    # Esto amarra el cálculo al P.O. Number
     orden = models.OneToOneField(OrdenTrabajo, on_delete=models.CASCADE, related_name='calculo')
     
-    # Opciones que me pediste
     TIPO_CALCULO = [('MANO', 'A Mano (Hand)'), ('MAQUINA', 'A Máquina (Machine)')]
     metodo = models.CharField(max_length=15, choices=TIPO_CALCULO)
     
-    # === DATOS EXTRAÍDOS DE TU EXCEL (Específicos para Mano) ===
+    # === DATOS PARA TELAR MANUAL ===
     sq_ft = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, verbose_name="SQ.F.")
     hilos_por_pulgada = models.CharField(max_length=50, null=True, blank=True, verbose_name="Hilos x Plg")
     peine = models.CharField(max_length=50, null=True, blank=True, verbose_name="Peine")
     por_diente = models.CharField(max_length=100, null=True, blank=True, verbose_name="Por Diente")
+    largo_urdir = models.CharField(max_length=50, null=True, blank=True, verbose_name="Largo Urdir") # NUEVO
+    material_pie = models.TextField(verbose_name="Detalle Material en PIE", null=True, blank=True)
+    material_trama = models.TextField(verbose_name="Detalle Material en TRAMA", null=True, blank=True)
+
+    # === DATOS PARA TELAR MÁQUINA (SOMET) ===
+    somet_yardas = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Yardas SOMET")
+    material_somet = models.TextField(verbose_name="Detalle Hilos SOMET", null=True, blank=True)
     
-    # === DESGLOSE DE MATERIALES ===
-    # Aquí guardaremos lo que va en PIE (SDA, colores, cables, libras)
-    material_pie = models.TextField(verbose_name="Detalle Material en PIE")
-    # Aquí guardaremos lo que va en TRAMA
-    material_trama = models.TextField(verbose_name="Detalle Material en TRAMA")
-    
-    # Quién hizo el cálculo y cuándo
     creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
