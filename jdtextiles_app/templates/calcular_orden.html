@@ -163,74 +163,228 @@
 
         {% elif orden.tipo == 'MAQUINA' %}
 
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Parámetros Máquina: SOMET</h3>
-                    <span class="text-xs font-bold bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 shadow-sm">PO: {{ orden.po_number }}</span>
+            <div class="bg-blue-900 rounded-xl shadow-md px-6 py-4 flex items-center justify-between print:hidden">
+                <div class="flex items-center gap-4">
+                    <span class="text-white font-black tracking-widest uppercase">Tecnología:</span>
+                    <select id="selector_maquina" name="subtipo_maquina" class="py-2 px-6 rounded-md font-bold text-blue-900 border-none outline-none focus:ring-4 focus:ring-blue-400 cursor-pointer shadow-lg">
+                        <option value="SOMET">TELAR SOMET</option>
+                        <option value="DORNIER">TELAR DORNIER</option>
+                    </select>
                 </div>
-                <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-6 bg-white">
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Agujas</label>
-                        <input type="number" step="0.01" name="somet_altura_agujas" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                <span class="text-xs font-bold bg-blue-800 text-blue-200 px-4 py-1.5 rounded-full border border-blue-700">PO: {{ orden.po_number }}</span>
+            </div>
+
+            <div id="panel_somet" class="space-y-6 transition-all duration-300">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Parámetros SOMET</h3>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Tejido</label>
-                        <input type="number" step="0.01" name="somet_altura_tejido" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                    <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-6 bg-white">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Agujas</label>
+                            <input type="number" step="0.01" name="somet_altura_agujas" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Tejido</label>
+                            <input type="number" step="0.01" name="somet_altura_tejido" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Yardas Tejidas</label>
+                            <input type="number" step="0.01" id="somet_yardas" name="somet_yardas" class="w-full py-2 px-3 border border-blue-400 bg-blue-50 rounded-lg text-sm font-bold text-blue-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm somet-input" placeholder="0.00">
+                        </div>
+                        <div class="bg-slate-800 text-white p-3 rounded-lg shadow-inner flex flex-col justify-center items-center">
+                            <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Metros Tejidos (+0.5)</span>
+                            <span id="somet_metros_tejidos" class="text-2xl font-black text-blue-400 mt-1">0.00</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Yardas Tejidas</label>
-                        <input type="number" step="0.01" id="somet_yardas" name="somet_yardas" class="w-full py-2 px-3 border border-blue-400 bg-blue-50 rounded-lg text-sm font-bold text-blue-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm somet-input" placeholder="0.00">
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Cálculo de Hilo SOMET (4 Posiciones)</h3>
                     </div>
-                    <div class="bg-slate-800 text-white p-3 rounded-lg shadow-inner flex flex-col justify-center items-center">
-                        <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Metros Tejidos (+0.5)</span>
-                        <span id="somet_metros_tejidos" class="text-2xl font-black text-blue-400 mt-1">0.00</span>
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse min-w-[1000px]">
+                            <thead>
+                                <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                    <th class="p-2 w-12 text-center bg-slate-50 rounded-tl-lg">Pos</th>
+                                    <th class="p-2 w-48">Color / Material</th>
+                                    <th class="p-2 text-center w-24">Repetición</th>
+                                    <th class="p-2 text-center w-24">Quesos</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Tot. Quesos</th>
+                                    <th class="p-2 text-center w-24 border-l border-slate-200">% Consumo</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Gasto Hilo</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Mts/Queso</th>
+                                    <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
+                                    <th class="p-2 text-center w-24 bg-blue-50 text-blue-800 rounded-tr-lg">Lbs Finales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-somet">
+                                {% for i in "1234" %}
+                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-somet">
+                                    <td class="p-2 text-center font-black text-slate-400 bg-slate-50/50">{{ i }}</td>
+                                    <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none somet-color" placeholder="Nombre de hilo"></td>
+                                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-rep" placeholder="0"></td>
+                                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-quesos" placeholder="0"></td>
+                                    <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-tot-quesos">0</td>
+                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-blue-200 rounded-md text-center shadow-sm outline-none somet-input somet-pct" placeholder="%"></td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 somet-gasto">0.00</td>
+                                    <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-mtsq">0.00</td>
+                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-nm" placeholder="0"></td>
+                                    <td class="p-2 text-center font-black text-blue-700 bg-blue-50/50 text-sm somet-lbs">0</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                    <td colspan="9" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Somet:</td>
+                                    <td class="py-3 px-2 text-center text-blue-700 text-lg" id="somet_gran_total_lbs">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
-                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Cálculo de Hilo SOMET (4 Posiciones)</h3>
+            <div id="panel_dornier" class="space-y-6 hidden transition-all duration-300">
+                
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">1. Configuración de Patrón (DORNIER)</h3>
+                    </div>
+                    <div class="p-5 flex gap-6 items-end bg-slate-50/50">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cantidad Total de Hilos</label>
+                            <input type="number" id="dornier_cant_hilos" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 1200">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Repetición</label>
+                            <input type="number" id="dornier_repeticion" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 6">
+                        </div>
+                        <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-inner flex items-center gap-3">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Repeticiones Completas:</label>
+                            <span id="dornier_reps_completas" class="text-xl font-black text-white">0.00</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="overflow-x-auto p-4">
-                    <table class="w-full text-left border-collapse min-w-[1000px]">
-                        <thead>
-                            <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
-                                <th class="p-2 w-12 text-center bg-slate-50 rounded-tl-lg">Pos</th>
-                                <th class="p-2 w-48">Color / Material</th>
-                                <th class="p-2 text-center w-24">Repetición</th>
-                                <th class="p-2 text-center w-24">Quesos</th>
-                                <th class="p-2 text-center w-24 bg-slate-50">Tot. Quesos</th>
-                                <th class="p-2 text-center w-24 border-l border-slate-200">% Consumo</th>
-                                <th class="p-2 text-center w-24 bg-slate-50">Gasto Hilo</th>
-                                <th class="p-2 text-center w-24 bg-slate-50">Mts/Queso</th>
-                                <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
-                                <th class="p-2 text-center w-24 bg-blue-50 text-blue-800 rounded-tr-lg">Lbs Finales</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-somet">
-                            {% for i in "1234" %}
-                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-somet">
-                                <td class="p-2 text-center font-black text-slate-400 bg-slate-50/50">{{ i }}</td>
-                                <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none somet-color" placeholder="Nombre de hilo"></td>
-                                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-rep" placeholder="0"></td>
-                                <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-quesos" placeholder="0"></td>
-                                <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-tot-quesos">0</td>
-                                <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-blue-200 rounded-md text-center shadow-sm outline-none somet-input somet-pct" placeholder="%"></td>
-                                <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 somet-gasto">0.00</td>
-                                <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-mtsq">0.00</td>
-                                <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-nm" placeholder="0"></td>
-                                <td class="p-2 text-center font-black text-blue-700 bg-blue-50/50 text-sm somet-lbs">0</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                <td colspan="9" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Somet:</td>
-                                <td class="py-3 px-2 text-center text-blue-700 text-lg" id="somet_gran_total_lbs">0</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">2. Cálculo de PIE (Urdido)</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Ancho (Auto):</span>
+                            <span class="font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded border border-blue-200 text-xs"><span id="dornier_ancho_m_display">0.00</span> Metros</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex gap-6 bg-slate-50/50 border-b border-slate-200 items-end">
+                        <input type="hidden" id="dornier_ancho_ft" value="{{ orden.ancho_ft|stringformat:'s' }}">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Aproximación</label>
+                            <input type="number" step="0.01" id="dornier_aprox_pie" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 1.0">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Desperdicio (Mts)</label>
+                            <input type="number" step="0.01" id="dornier_desp_pie" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 0">
+                        </div>
+                        <div class="ml-auto bg-green-800 text-white px-5 py-2 rounded-lg shadow-inner flex items-center gap-3">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-green-200">Metros a Urdir:</label>
+                            <span id="dornier_mts_urdir" class="text-xl font-black text-white">0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse min-w-[900px]">
+                            <thead>
+                                <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                    <th class="p-2 w-48">Color de Hilo (Pie)</th>
+                                    <th class="p-2 text-center w-24 border-l border-slate-200 bg-slate-50">Hilos por Color en Rep.</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Total Hilos por Color</th>
+                                    <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Kilos</th>
+                                    <th class="p-2 text-center w-24 bg-green-50 text-green-800 rounded-tr-lg">Libras (Ceil)</th>
+                                    <th class="p-2 text-center w-8 print:hidden"><button type="button" id="btn_add_d_pie" class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">+</button></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-dornier-pie">
+                                {% for i in "123" %}
+                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-dornier-pie">
+                                    <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-color"></td>
+                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_pie_hilos_rep" placeholder="Hilos en el patrón"></td>
+                                    <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 d_pie_tot_hilos">0</td>
+                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_pie_nm" placeholder="Nm"></td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 d_pie_kilos">0.000</td>
+                                    <td class="p-2 text-center font-black text-green-700 bg-green-50/50 text-sm d_pie_lbs">0</td>
+                                    <td class="p-2 text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 font-black btn-del-dornier">X</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                    <td colspan="5" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Pie:</td>
+                                    <td class="py-3 px-2 text-center text-green-700 text-lg" id="d_pie_gran_total">0</td>
+                                    <td class="print:hidden"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                        <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Cálculo de TRAMA - DORNIER</h3>
+                    </div>
+                    <div class="p-5 flex gap-6 bg-slate-50/50 border-b border-slate-200 items-end">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Num. Pasadas</label>
+                            <input type="number" step="0.01" id="dornier_pasadas" class="w-24 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                        </div>
+                        <div class="bg-white px-3 py-1.5 border border-slate-200 rounded-md shadow-sm">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Pasadas en 1m: </span>
+                            <span id="dornier_pasadas_1m" class="font-bold text-slate-700 ml-2">0</span>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Aproximación</label>
+                            <input type="number" step="0.01" id="dornier_aprox_trama" class="w-24 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" value="1.0">
+                        </div>
+                        <div class="ml-auto bg-orange-800 text-white px-5 py-2 rounded-lg shadow-inner flex items-center gap-3">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-orange-200">Metros Lineales:</label>
+                            <span id="dornier_mts_lineales" class="text-xl font-black text-white">0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full text-left border-collapse min-w-[900px]">
+                            <thead>
+                                <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
+                                    <th class="p-2 w-48">Color de Hilo (Trama)</th>
+                                    <th class="p-2 text-center w-24">Divisor Colores</th>
+                                    <th class="p-2 text-center w-20 border-l border-slate-200">No. Métrico</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50">Kilos</th>
+                                    <th class="p-2 text-center w-24 bg-orange-50 text-orange-800 rounded-tr-lg">Lbs Finales (Color)</th>
+                                    <th class="p-2 text-center w-8 print:hidden">
+                                        <button type="button" id="btn_add_d_trama" class="bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold">+</button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-dornier-trama">
+                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-dornier-trama">
+                                    <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-t-color" placeholder="Color"></td>
+                                    <td class="p-2"><input type="number" step="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_trama_divisor" value="1"></td>
+                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_trama_nm" placeholder="Nm"></td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 d_trama_kilos">0.000</td>
+                                    <td class="p-2 text-center font-black text-orange-700 bg-orange-50/50 text-sm d_trama_lbs">0</td>
+                                    <td class="p-2 text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 font-black btn-del-dornier">X</button></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
+                                    <td colspan="4" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Trama:</td>
+                                    <td class="py-3 px-2 text-center text-orange-700 text-lg" id="d_trama_gran_total">0</td>
+                                    <td class="print:hidden"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -240,6 +394,7 @@
         <input type="hidden" name="datos_pie_json" id="datos_pie_json">
         <input type="hidden" name="datos_trama_json" id="datos_trama_json">
         <input type="hidden" name="datos_somet_json" id="datos_somet_json">
+        <input type="hidden" name="datos_dornier_json" id="datos_dornier_json">
 
         <div class="flex justify-end gap-4 mt-8 pb-10 print:hidden">
             <button type="button" onclick="window.print()" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
@@ -251,224 +406,218 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    // ==========================================
-    // LOGICA TELAR MANUAL
-    // ==========================================
     {% if orden.tipo == 'MANO' %}
-    
-        let current_sqft = 0;
-        let ancho_total_in = 0;
-
+        // === LOGICA MANO (Intacta) === 
+        let current_sqft = 0; let ancho_total_in = 0;
         function calcularArea() {
-            let a_ft = parseFloat(document.getElementById('ancho_ft').value) || 0;
-            let a_in = parseFloat(document.getElementById('ancho_in').value) || 0;
-            let l_ft = parseFloat(document.getElementById('largo_ft').value) || 0;
-            let l_in = parseFloat(document.getElementById('largo_in').value) || 0;
-            ancho_total_in = (a_ft * 12) + a_in;
-            let total_largo_in = (l_ft * 12) + l_in;
-            current_sqft = (ancho_total_in * total_largo_in) / 144;
-            document.getElementById('display_sqft').innerText = current_sqft.toFixed(3);
-            document.getElementById('display_pulgadas').innerText = ancho_total_in + '\" x ' + total_largo_in + '\"';
-            calcularReglaPatron();
-            calcularTrama();
+            let a_ft = parseFloat(document.getElementById('ancho_ft').value) || 0; let a_in = parseFloat(document.getElementById('ancho_in').value) || 0;
+            let l_ft = parseFloat(document.getElementById('largo_ft').value) || 0; let l_in = parseFloat(document.getElementById('largo_in').value) || 0;
+            ancho_total_in = (a_ft * 12) + a_in; let total_largo_in = (l_ft * 12) + l_in; current_sqft = (ancho_total_in * total_largo_in) / 144;
+            document.getElementById('display_sqft').innerText = current_sqft.toFixed(3); document.getElementById('display_pulgadas').innerText = ancho_total_in + '\" x ' + total_largo_in + '\"';
+            calcularReglaPatron(); calcularTrama();
         }
-
         function calcularReglaPatron() {
-            let tipo = document.getElementById('tipo_patron').value;
-            let ganancia = parseFloat(document.getElementById('ganancia_pulgadas').value) || 0;
-            let ancho_con_ganancia = ancho_total_in + ganancia;
-            let total_base = 0;
-            if (tipo === 'LISO') {
-                document.getElementById('div_repeticiones').classList.add('hidden');
-                total_base = ancho_con_ganancia;
-            } else {
-                document.getElementById('div_repeticiones').classList.remove('hidden');
-                let repeticiones = parseFloat(document.getElementById('repeticiones').value) || 1;
-                total_base = Math.ceil(ancho_con_ganancia / repeticiones);
-            }
-            document.getElementById('pies_urdir').value = total_base;
-            calcularPie(); 
+            let tipo = document.getElementById('tipo_patron').value; let ganancia = parseFloat(document.getElementById('ganancia_pulgadas').value) || 0;
+            let ancho_con_ganancia = ancho_total_in + ganancia; let total_base = 0;
+            if (tipo === 'LISO') { document.getElementById('div_repeticiones').classList.add('hidden'); total_base = ancho_con_ganancia; } 
+            else { document.getElementById('div_repeticiones').classList.remove('hidden'); let repeticiones = parseFloat(document.getElementById('repeticiones').value) || 1; total_base = Math.ceil(ancho_con_ganancia / repeticiones); }
+            document.getElementById('pies_urdir').value = total_base; calcularPie(); 
         }
-
         function generarGrupoPie(cantidad) {
-            let tbody = document.createElement('tbody');
-            tbody.className = 'grupo-pie border-b-[12px] border-white bg-clip-padding'; 
-            let html = '';
+            let tbody = document.createElement('tbody'); tbody.className = 'grupo-pie border-b-[12px] border-white bg-clip-padding'; let html = '';
             for(let i = 0; i < cantidad; i++) {
-                html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">
-                    <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
-                    <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
-                    <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
-                if(i === 0) {
-                    html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                            <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
-                                <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
-                            </select>
-                        </td>
-                        <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                            <input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie hilos-pie font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                        </td>
-                        <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-hilos-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`;
-                }
-                html += `<td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td>
-                    <td class="p-2 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td>
-                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
-                if(i === 0) {
-                    html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`;
-                }
-                html += `</tr>`;
+                html += `<tr class="fila-pie hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors"><td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td><td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td><td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
+                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc"><option value="Z">Z</option><option value="S">S</option><option value="-">-</option></select></td><td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie hilos-pie font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td><td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-hilos-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`; }
+                html += `<td class="p-2"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm input-pie peso-pie focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td><td class="p-2 text-center font-bold text-slate-500 lbs-est-row text-xs">0</td><td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
+                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`; } html += `</tr>`;
             }
-            tbody.innerHTML = html;
-            return tbody;
+            tbody.innerHTML = html; return tbody;
         }
-
         function generarGrupoTrama(cantidad) {
-            let tbody = document.createElement('tbody');
-            tbody.className = 'grupo-trama border-b-[12px] border-white bg-clip-padding';
-            let html = '';
+            let tbody = document.createElement('tbody'); tbody.className = 'grupo-trama border-b-[12px] border-white bg-clip-padding'; let html = '';
             for(let i = 0; i < cantidad; i++) {
-                html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors">
-                    <td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td>
-                    <td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td>
-                    <td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
-                if(i === 0) {
-                    html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                            <select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc">
-                                <option value="Z">Z</option><option value="S">S</option><option value="-">-</option>
-                            </select>
-                        </td>
-                        <td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50">
-                            <input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                        </td>
-                        <td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`;
-                }
-                html += `<td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td>
-                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
-                if(i === 0) {
-                    html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`;
-                }
-                html += `</tr>`;
+                html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors"><td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td><td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td><td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
+                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc"><option value="Z">Z</option><option value="S">S</option><option value="-">-</option></select></td><td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td><td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`; }
+                html += `<td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td><td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
+                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`; } html += `</tr>`;
             }
-            tbody.innerHTML = html;
-            return tbody;
+            tbody.innerHTML = html; return tbody;
         }
-
         function calcularPie() {
-            let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0;
-            let grupos = document.querySelectorAll('.grupo-pie');
-            let suma_hilos_total = 0; let suma_lbs_total = 0;
-            grupos.forEach(grupo => {
-                let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0;
-                let total_hilos_grupo = hilos_pie * pies_urdir;
-                grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2);
-                suma_hilos_total += total_hilos_grupo;
-                let filas = grupo.querySelectorAll('.fila-pie');
-                filas.forEach(fila => {
-                    let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0;
-                    let lbs_estimadas = Math.ceil((peso * total_hilos_grupo) / 460); 
-                    fila.querySelector('.lbs-est-row').innerText = lbs_estimadas;
-                    suma_lbs_total += lbs_estimadas;
-                });
-            });
-            document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2);
-            document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_total;
+            let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0; let grupos = document.querySelectorAll('.grupo-pie'); let suma_hilos_total = 0; let suma_lbs_total = 0;
+            grupos.forEach(grupo => { let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0; let total_hilos_grupo = hilos_pie * pies_urdir; grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2); suma_hilos_total += total_hilos_grupo; let filas = grupo.querySelectorAll('.fila-pie');
+                filas.forEach(fila => { let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0; let lbs_estimadas = Math.ceil((peso * total_hilos_grupo) / 460); fila.querySelector('.lbs-est-row').innerText = lbs_estimadas; suma_lbs_total += lbs_estimadas; }); });
+            document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2); document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_total;
         }
-
         function calcularTrama() {
-            let grupos = document.querySelectorAll('.grupo-trama');
-            let suma_pasadas_total = 0; let suma_lbs_total = 0;
-            grupos.forEach(grupo => {
-                let filas = grupo.querySelectorAll('.fila-trama');
-                filas.forEach(fila => {
-                    let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0;
-                    let total_pasadas_fila = onzas * current_sqft;
-                    fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2);
-                    suma_pasadas_total += total_pasadas_fila;
-                    let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); 
-                    fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas;
-                    suma_lbs_total += lbs_estimadas;
-                });
-            });
-            document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2);
-            document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_total;
+            let grupos = document.querySelectorAll('.grupo-trama'); let suma_pasadas_total = 0; let suma_lbs_total = 0;
+            grupos.forEach(grupo => { let filas = grupo.querySelectorAll('.fila-trama');
+                filas.forEach(fila => { let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0; let total_pasadas_fila = onzas * current_sqft; fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2); suma_pasadas_total += total_pasadas_fila; let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas; suma_lbs_total += lbs_estimadas; }); });
+            document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2); document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_total;
         }
 
-        document.getElementById('tabla-pie').insertBefore(generarGrupoPie(1), document.getElementById('tfoot-pie'));
-        document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(1), document.getElementById('tfoot-trama'));
-
-        document.getElementById('btn-agregar-pie').addEventListener('click', function() {
-            document.getElementById('tabla-pie').insertBefore(generarGrupoPie(parseInt(document.getElementById('select-compuestos-pie').value)), document.getElementById('tfoot-pie'));
-        });
-        document.getElementById('btn-agregar-trama').addEventListener('click', function() {
-            document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(parseInt(document.getElementById('select-compuestos-trama').value)), document.getElementById('tfoot-trama'));
-        });
-
+        document.getElementById('tabla-pie').insertBefore(generarGrupoPie(1), document.getElementById('tfoot-pie')); document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(1), document.getElementById('tfoot-trama'));
+        document.getElementById('btn-agregar-pie').addEventListener('click', function() { document.getElementById('tabla-pie').insertBefore(generarGrupoPie(parseInt(document.getElementById('select-compuestos-pie').value)), document.getElementById('tfoot-pie')); });
+        document.getElementById('btn-agregar-trama').addEventListener('click', function() { document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(parseInt(document.getElementById('select-compuestos-trama').value)), document.getElementById('tfoot-trama')); });
         document.getElementById('tabla-pie').addEventListener('input', function(e) { if (e.target.classList.contains('input-pie')) calcularPie(); });
-        document.getElementById('tabla-pie').addEventListener('click', function(e) {
-            if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); }
-        });
-
+        document.getElementById('tabla-pie').addEventListener('click', function(e) { if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); } });
         document.getElementById('tabla-trama').addEventListener('input', function(e) { if (e.target.classList.contains('input-trama')) calcularTrama(); });
-        document.getElementById('tabla-trama').addEventListener('click', function(e) {
-            if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); }
-        });
-
-        document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea));
-        document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
+        document.getElementById('tabla-trama').addEventListener('click', function(e) { if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); } });
+        document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea)); document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
         
-        // Disparar calculo inicial de area
         calcularArea();
 
-    // ==========================================
-    // LOGICA MÁQUINA SOMET
-    // ==========================================
     {% elif orden.tipo == 'MAQUINA' %}
 
-        let metros_tejidos_somet = 0;
+        // === SELECTOR MÁQUINA ===
+        const selector = document.getElementById('selector_maquina');
+        const pSomet = document.getElementById('panel_somet');
+        const pDornier = document.getElementById('panel_dornier');
 
+        selector.addEventListener('change', function() {
+            if(this.value === 'SOMET') { pSomet.classList.remove('hidden'); pDornier.classList.add('hidden'); }
+            else { pSomet.classList.add('hidden'); pDornier.classList.remove('hidden'); calcularDornier(); }
+        });
+
+        // === LOGICA MÁQUINA SOMET (Intacta) ===
+        let metros_tejidos_somet = 0;
         function calcularSomet() {
             let yardas = parseFloat(document.getElementById('somet_yardas').value) || 0;
-            if (yardas > 0) {
-                metros_tejidos_somet = (yardas * 0.9144) + 0.5;
-            } else {
-                metros_tejidos_somet = 0;
-            }
+            metros_tejidos_somet = yardas > 0 ? (yardas * 0.9144) + 0.5 : 0;
             document.getElementById('somet_metros_tejidos').innerText = metros_tejidos_somet.toFixed(2);
-
             let total_lbs = 0;
             document.querySelectorAll('.fila-somet').forEach(fila => {
                 let rep = parseFloat(fila.querySelector('.somet-rep').value) || 0;
                 let quesos = parseFloat(fila.querySelector('.somet-quesos').value) || 0;
                 let pct = parseFloat(fila.querySelector('.somet-pct').value) || 0;
                 let nm = parseFloat(fila.querySelector('.somet-nm').value) || 0;
-
-                let tot_quesos = rep * quesos;
-                fila.querySelector('.somet-tot-quesos').innerText = tot_quesos.toFixed(2);
-
+                let tot_quesos = rep * quesos; fila.querySelector('.somet-tot-quesos').innerText = tot_quesos.toFixed(2);
                 let gasto = 0;
-                if (pct > 0 && pct <= 10) gasto = 2.75;
-                else if (pct > 10 && pct <= 25) gasto = 3.75;
-                else if (pct > 25) gasto = 4.5;
+                if (pct > 0 && pct <= 10) gasto = 2.75; else if (pct > 10 && pct <= 25) gasto = 3.75; else if (pct > 25) gasto = 4.5;
                 fila.querySelector('.somet-gasto').innerText = gasto.toFixed(2);
-
-                let mts_queso = metros_tejidos_somet * gasto;
-                fila.querySelector('.somet-mtsq').innerText = mts_queso.toFixed(2);
-
+                let mts_queso = metros_tejidos_somet * gasto; fila.querySelector('.somet-mtsq').innerText = mts_queso.toFixed(2);
                 let lbs = 0;
-                if (nm > 0 && tot_quesos > 0) {
-                    let formula = (((tot_quesos * mts_queso) / nm) / 1000) * 2.2046;
-                    lbs = Math.ceil(formula + 1); 
-                }
-                fila.querySelector('.somet-lbs').innerText = lbs;
-                total_lbs += lbs;
+                if (nm > 0 && tot_quesos > 0) { lbs = Math.ceil((((tot_quesos * mts_queso) / nm) / 1000) * 2.2046 + 1); }
+                fila.querySelector('.somet-lbs').innerText = lbs; total_lbs += lbs;
             });
-
             document.getElementById('somet_gran_total_lbs').innerText = total_lbs;
         }
+        document.querySelectorAll('.somet-input').forEach(input => input.addEventListener('input', calcularSomet));
 
-        document.querySelectorAll('.somet-input').forEach(input => {
-            input.addEventListener('input', calcularSomet);
+        // === LOGICA NUEVA MÁQUINA DORNIER ===
+        let metros_urdir_dornier = 0;
+        let metros_lineales_dornier = 0;
+        let dornier_reps_completas = 0;
+
+        function calcularDornier() {
+            // 1. DESGLOSE DEL PATRÓN
+            let cant_hilos = parseFloat(document.getElementById('dornier_cant_hilos').value) || 0;
+            let repeticion_patron = parseFloat(document.getElementById('dornier_repeticion').value) || 0;
+            
+            // Repeticiones Completas de la Alfombra
+            if (repeticion_patron > 0) {
+                dornier_reps_completas = cant_hilos / repeticion_patron;
+            } else {
+                dornier_reps_completas = 0;
+            }
+            document.getElementById('dornier_reps_completas').innerText = dornier_reps_completas.toFixed(2);
+
+            // 2. PIE: Convertir Ancho y Sacar Metros a Urdir
+            let ancho_ft = parseFloat(document.getElementById('dornier_ancho_ft').value) || 0;
+            let ancho_m = ancho_ft * 0.3048;
+            document.getElementById('dornier_ancho_m_display').innerText = ancho_m.toFixed(2);
+
+            let aprox_pie = parseFloat(document.getElementById('dornier_aprox_pie').value) || 0;
+            let desp_pie = parseFloat(document.getElementById('dornier_desp_pie').value) || 0;
+            metros_urdir_dornier = (ancho_m * aprox_pie) + desp_pie;
+            document.getElementById('dornier_mts_urdir').innerText = metros_urdir_dornier.toFixed(2);
+
+            // 3. PIE: Cálculo en Tabla
+            let gran_total_pie = 0;
+            document.querySelectorAll('.fila-dornier-pie').forEach(fila => {
+                // El usuario escribe cuántos hilos tiene el color dentro del patrón
+                let hilos_en_patron = parseFloat(fila.querySelector('.d_pie_hilos_rep').value) || 0;
+                let nm = parseFloat(fila.querySelector('.d_pie_nm').value) || 0;
+
+                // Total Hilos por color = Hilos en el patrón * Repeticiones Completas
+                let total_hilos_color = hilos_en_patron * dornier_reps_completas;
+                fila.querySelector('.d_pie_tot_hilos').innerText = total_hilos_color.toFixed(2);
+
+                let kilos = 0;
+                let lbs = 0;
+                if (nm > 0) {
+                    kilos = (total_hilos_color * metros_urdir_dornier) / nm / 1000;
+                    lbs = Math.ceil(kilos * 2.2046); 
+                }
+                fila.querySelector('.d_pie_kilos').innerText = kilos.toFixed(3);
+                fila.querySelector('.d_pie_lbs').innerText = lbs;
+                gran_total_pie += lbs;
+            });
+            document.getElementById('d_pie_gran_total').innerText = gran_total_pie;
+
+            // 4. TRAMA: Metros Lineales
+            let pasadas = parseFloat(document.getElementById('dornier_pasadas').value) || 0;
+            let pasadas_1m = pasadas * 100;
+            document.getElementById('dornier_pasadas_1m').innerText = pasadas_1m.toFixed(0);
+            
+            let aprox_trama = parseFloat(document.getElementById('dornier_aprox_trama').value) || 0;
+            metros_lineales_dornier = pasadas_1m * aprox_trama;
+            document.getElementById('dornier_mts_lineales').innerText = metros_lineales_dornier.toFixed(2);
+
+            // 5. TRAMA: Cálculo en Tabla
+            let gran_total_trama = 0;
+            document.querySelectorAll('.fila-dornier-trama').forEach(fila => {
+                let divisor = parseFloat(fila.querySelector('.d_trama_divisor').value) || 1;
+                let nm = parseFloat(fila.querySelector('.d_trama_nm').value) || 0;
+
+                let kilos = 0;
+                let lbs_color = 0;
+                if (nm > 0) {
+                    // Metros lineales * Metros Urdir
+                    kilos = (metros_lineales_dornier * metros_urdir_dornier) / nm / 1000;
+                    let lbs_total_hilo = kilos * 2.2046;
+                    lbs_color = Math.ceil(lbs_total_hilo / divisor); // Se divide entre los colores y se aproxima
+                }
+                fila.querySelector('.d_trama_kilos').innerText = kilos.toFixed(3);
+                fila.querySelector('.d_trama_lbs').innerText = lbs_color;
+                gran_total_trama += lbs_color;
+            });
+            document.getElementById('d_trama_gran_total').innerText = gran_total_trama;
+        }
+
+        // Agregar Eventos Dornier
+        document.getElementById('panel_dornier').addEventListener('input', function(e) {
+            if (e.target.classList.contains('dornier-input')) calcularDornier();
         });
+
+        // Botones Añadir Filas Dornier
+        document.getElementById('btn_add_d_pie').addEventListener('click', function() {
+            let fila = document.querySelector('.fila-dornier-pie').cloneNode(true);
+            fila.querySelectorAll('input').forEach(i => i.value = '');
+            fila.querySelectorAll('.d_pie_tot_hilos, .d_pie_kilos, .d_pie_lbs').forEach(s => s.innerText = '0');
+            document.getElementById('tbody-dornier-pie').appendChild(fila);
+        });
+        document.getElementById('btn_add_d_trama').addEventListener('click', function() {
+            let fila = document.querySelector('.fila-dornier-trama').cloneNode(true);
+            fila.querySelectorAll('input').forEach(i => i.value = '');
+            fila.querySelector('.d_trama_divisor').value = '1';
+            fila.querySelectorAll('.d_trama_kilos, .d_trama_lbs').forEach(s => s.innerText = '0');
+            document.getElementById('tbody-dornier-trama').appendChild(fila);
+        });
+
+        // Eliminar Filas
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-del-dornier')) {
+                let tbody = e.target.closest('tbody');
+                if (tbody.querySelectorAll('tr').length > 1) {
+                    e.target.closest('tr').remove();
+                    calcularDornier();
+                }
+            }
+        });
+
+        calcularSomet();
+        calcularDornier();
 
     {% endif %}
 
@@ -484,14 +633,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-pie').forEach(fila => {
                 let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
                 if(material.trim() !== '') {
-                    arrPie.push({
-                        material: material,
-                        color: fila.querySelector('.mat-color').value,
-                        unds: fila.querySelector('.mat-unds').value,
-                        torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-',
-                        peso: fila.querySelector('.peso-pie') ? fila.querySelector('.peso-pie').value : '0',
-                        lbs_final: fila.querySelector('.lbs-final-input').value 
-                    });
+                    arrPie.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-', peso: fila.querySelector('.peso-pie') ? fila.querySelector('.peso-pie').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
                 }
             });
             document.getElementById('datos_pie_json').value = JSON.stringify(arrPie);
@@ -500,14 +642,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-trama').forEach(fila => {
                 let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
                 if(material.trim() !== '') {
-                    arrTrama.push({
-                        material: material,
-                        color: fila.querySelector('.mat-color').value,
-                        unds: fila.querySelector('.mat-unds').value,
-                        torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-',
-                        onzas: fila.querySelector('.onzas-trama') ? fila.querySelector('.onzas-trama').value : '0',
-                        lbs_final: fila.querySelector('.lbs-final-input').value
-                    });
+                    arrTrama.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-', onzas: fila.querySelector('.onzas-trama') ? fila.querySelector('.onzas-trama').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
                 }
             });
             document.getElementById('datos_trama_json').value = JSON.stringify(arrTrama);
@@ -518,17 +653,28 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-somet').forEach(fila => {
                 let color = fila.querySelector('.somet-color').value;
                 if(color.trim() !== '') {
-                    arrSomet.push({
-                        color: color,
-                        repeticiones: fila.querySelector('.somet-rep').value,
-                        quesos: fila.querySelector('.somet-quesos').value,
-                        porcentaje: fila.querySelector('.somet-pct').value,
-                        nm: fila.querySelector('.somet-nm').value,
-                        lbs_final: fila.querySelector('.somet-lbs').innerText
-                    });
+                    arrSomet.push({ color: color, repeticiones: fila.querySelector('.somet-rep').value, quesos: fila.querySelector('.somet-quesos').value, porcentaje: fila.querySelector('.somet-pct').value, nm: fila.querySelector('.somet-nm').value, lbs_final: fila.querySelector('.somet-lbs').innerText });
                 }
             });
             document.getElementById('datos_somet_json').value = JSON.stringify(arrSomet);
+
+            let arrDornierPie = [];
+            document.querySelectorAll('.fila-dornier-pie').forEach(fila => {
+                let color = fila.querySelector('.dornier-color').value;
+                if(color.trim() !== '') {
+                    arrDornierPie.push({ color: color, hilos_repeticion: fila.querySelector('.d_pie_hilos_rep').value, total_hilos_color: fila.querySelector('.d_pie_tot_hilos').innerText, nm: fila.querySelector('.d_pie_nm').value, lbs_final: fila.querySelector('.d_pie_lbs').innerText });
+                }
+            });
+            
+            let arrDornierTrama = [];
+            document.querySelectorAll('.fila-dornier-trama').forEach(fila => {
+                let color = fila.querySelector('.dornier-t-color').value;
+                if(color.trim() !== '') {
+                    arrDornierTrama.push({ color: color, divisor: fila.querySelector('.d_trama_divisor').value, nm: fila.querySelector('.d_trama_nm').value, lbs_final: fila.querySelector('.d_trama_lbs').innerText });
+                }
+            });
+
+            document.getElementById('datos_dornier_json').value = JSON.stringify({ pie: arrDornierPie, trama: arrDornierTrama });
             
         {% endif %}
     });
