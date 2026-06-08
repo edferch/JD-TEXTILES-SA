@@ -19,6 +19,9 @@
     <form method="POST" id="form-calculo" class="max-w-[1400px] mx-auto space-y-6">
         {% csrf_token %}
         
+        <!-- ========================================== -->
+        <!-- SECCIÓN 1: TELAR MANUAL                    -->
+        <!-- ========================================== -->
         {% if orden.tipo == 'MANO' %}
         
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -161,8 +164,12 @@
                 </div>
             </div>
 
+        <!-- ========================================== -->
+        <!-- SECCIÓN 2: MÁQUINAS (SOMET / DORNIER)      -->
+        <!-- ========================================== -->
         {% elif orden.tipo == 'MAQUINA' %}
 
+            <!-- SELECTOR DE MAQUINARIA -->
             <div class="bg-blue-900 rounded-xl shadow-md px-6 py-4 flex items-center justify-between print:hidden">
                 <div class="flex items-center gap-4">
                     <span class="text-white font-black tracking-widest uppercase">Tecnología:</span>
@@ -174,6 +181,9 @@
                 <span class="text-xs font-bold bg-blue-800 text-blue-200 px-4 py-1.5 rounded-full border border-blue-700">PO: {{ orden.po_number }}</span>
             </div>
 
+            <!-- ============================== -->
+            <!-- PANEL SOMET                    -->
+            <!-- ============================== -->
             <div id="panel_somet" class="space-y-6 transition-all duration-300">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
@@ -246,8 +256,12 @@
                 </div>
             </div>
 
+            <!-- ============================== -->
+            <!-- PANEL DORNIER                  -->
+            <!-- ============================== -->
             <div id="panel_dornier" class="space-y-6 hidden transition-all duration-300">
                 
+                <!-- 1. BASE: Desglose del Patrón -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
                         <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">1. Configuración de Patrón (DORNIER)</h3>
@@ -261,6 +275,10 @@
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Repetición</label>
                             <input type="number" id="dornier_repeticion" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 6">
                         </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">No. Métrico (Universal)</label>
+                            <input type="number" step="0.01" id="dornier_nm_universal" class="w-32 py-1.5 px-3 border border-blue-400 bg-blue-50 text-blue-900 font-bold rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nm">
+                        </div>
                         <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-inner flex items-center gap-3">
                             <label class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Repeticiones Completas:</label>
                             <span id="dornier_reps_completas" class="text-xl font-black text-white">0.00</span>
@@ -268,6 +286,7 @@
                     </div>
                 </div>
 
+                <!-- 2. PIE: Urdido -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
                         <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">2. Cálculo de PIE (Urdido)</h3>
@@ -299,36 +318,33 @@
                                     <th class="p-2 w-48">Color de Hilo (Pie)</th>
                                     <th class="p-2 text-center w-24 border-l border-slate-200 bg-slate-50">Hilos por Color en Rep.</th>
                                     <th class="p-2 text-center w-24 bg-slate-50">Total Hilos por Color</th>
-                                    <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
-                                    <th class="p-2 text-center w-24 bg-slate-50">Kilos</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50 border-l border-slate-200">Kilos</th>
                                     <th class="p-2 text-center w-24 bg-green-50 text-green-800 rounded-tr-lg">Libras (Ceil)</th>
-                                    <th class="p-2 text-center w-8 print:hidden"><button type="button" id="btn_add_d_pie" class="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold">+</button></th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-dornier-pie">
+                                <!-- Estático a 3 colores -->
                                 {% for i in "123" %}
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-dornier-pie">
                                     <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-color"></td>
                                     <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_pie_hilos_rep" placeholder="Hilos en el patrón"></td>
                                     <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 d_pie_tot_hilos">0</td>
-                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_pie_nm" placeholder="Nm"></td>
-                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 d_pie_kilos">0.000</td>
+                                    <td class="p-2 border-l border-slate-100 text-center font-bold text-slate-500 bg-slate-50/50 d_pie_kilos">0.000</td>
                                     <td class="p-2 text-center font-black text-green-700 bg-green-50/50 text-sm d_pie_lbs">0</td>
-                                    <td class="p-2 text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 font-black btn-del-dornier">X</button></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                    <td colspan="5" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Pie:</td>
+                                    <td colspan="4" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Pie:</td>
                                     <td class="py-3 px-2 text-center text-green-700 text-lg" id="d_pie_gran_total">0</td>
-                                    <td class="print:hidden"></td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
 
+                <!-- 3. TRAMA: Dornier -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
                         <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">3. Cálculo de TRAMA - DORNIER</h3>
@@ -357,30 +373,24 @@
                             <thead>
                                 <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
                                     <th class="p-2 w-48">Color de Hilo (Trama)</th>
-                                    <th class="p-2 text-center w-24">Divisor Colores</th>
-                                    <th class="p-2 text-center w-20 border-l border-slate-200">No. Métrico</th>
-                                    <th class="p-2 text-center w-24 bg-slate-50">Kilos</th>
+                                    <th class="p-2 text-center w-24 bg-slate-50 border-l border-slate-200">Kilos</th>
                                     <th class="p-2 text-center w-24 bg-orange-50 text-orange-800 rounded-tr-lg">Lbs Finales (Color)</th>
-                                    <th class="p-2 text-center w-8 print:hidden">
-                                        <button type="button" id="btn_add_d_trama" class="bg-orange-600 text-white px-2 py-1 rounded text-xs font-bold">+</button>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-dornier-trama">
+                                <!-- Estático a 3 colores -->
+                                {% for i in "123" %}
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-dornier-trama">
-                                    <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-t-color" placeholder="Color"></td>
-                                    <td class="p-2"><input type="number" step="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_trama_divisor" value="1"></td>
-                                    <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_trama_nm" placeholder="Nm"></td>
-                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 d_trama_kilos">0.000</td>
+                                    <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-input dornier-t-color" placeholder="Color"></td>
+                                    <td class="p-2 border-l border-slate-100 text-center font-bold text-slate-500 bg-slate-50/50 d_trama_kilos">0.000</td>
                                     <td class="p-2 text-center font-black text-orange-700 bg-orange-50/50 text-sm d_trama_lbs">0</td>
-                                    <td class="p-2 text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 font-black btn-del-dornier">X</button></td>
                                 </tr>
+                                {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                    <td colspan="4" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Trama:</td>
+                                    <td colspan="2" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Trama:</td>
                                     <td class="py-3 px-2 text-center text-orange-700 text-lg" id="d_trama_gran_total">0</td>
-                                    <td class="print:hidden"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -390,6 +400,7 @@
 
         {% endif %}
 
+        <!-- CAMPOS OCULTOS -->
         <input type="hidden" name="hidden_sq_ft" id="hidden_sq_ft">
         <input type="hidden" name="datos_pie_json" id="datos_pie_json">
         <input type="hidden" name="datos_trama_json" id="datos_trama_json">
@@ -510,6 +521,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let dornier_reps_completas = 0;
 
         function calcularDornier() {
+            // 0. NÚMERO MÉTRICO UNIVERSAL
+            let nm_universal = parseFloat(document.getElementById('dornier_nm_universal').value) || 0;
+
             // 1. DESGLOSE DEL PATRÓN
             let cant_hilos = parseFloat(document.getElementById('dornier_cant_hilos').value) || 0;
             let repeticion_patron = parseFloat(document.getElementById('dornier_repeticion').value) || 0;
@@ -529,15 +543,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
             let aprox_pie = parseFloat(document.getElementById('dornier_aprox_pie').value) || 0;
             let desp_pie = parseFloat(document.getElementById('dornier_desp_pie').value) || 0;
-            metros_urdir_dornier = (ancho_m * aprox_pie) + desp_pie;
+            
+            // Aproximación a mayor de los metros a urdir
+            metros_urdir_dornier = Math.ceil((ancho_m * aprox_pie) + desp_pie);
             document.getElementById('dornier_mts_urdir').innerText = metros_urdir_dornier.toFixed(2);
 
             // 3. PIE: Cálculo en Tabla
             let gran_total_pie = 0;
             document.querySelectorAll('.fila-dornier-pie').forEach(fila => {
-                // El usuario escribe cuántos hilos tiene el color dentro del patrón
                 let hilos_en_patron = parseFloat(fila.querySelector('.d_pie_hilos_rep').value) || 0;
-                let nm = parseFloat(fila.querySelector('.d_pie_nm').value) || 0;
 
                 // Total Hilos por color = Hilos en el patrón * Repeticiones Completas
                 let total_hilos_color = hilos_en_patron * dornier_reps_completas;
@@ -545,9 +559,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 let kilos = 0;
                 let lbs = 0;
-                if (nm > 0) {
-                    kilos = (total_hilos_color * metros_urdir_dornier) / nm / 1000;
-                    lbs = Math.ceil(kilos * 2.2046); 
+                if (nm_universal > 0) {
+                    kilos = (total_hilos_color * metros_urdir_dornier) / nm_universal / 1000;
+                    lbs = Math.ceil(kilos * 2.2046); // Aproxima siempre a mayor
                 }
                 fila.querySelector('.d_pie_kilos').innerText = kilos.toFixed(3);
                 fila.querySelector('.d_pie_lbs').innerText = lbs;
@@ -564,23 +578,42 @@ document.addEventListener("DOMContentLoaded", function() {
             metros_lineales_dornier = pasadas_1m * aprox_trama;
             document.getElementById('dornier_mts_lineales').innerText = metros_lineales_dornier.toFixed(2);
 
-            // 5. TRAMA: Cálculo en Tabla
-            let gran_total_trama = 0;
-            document.querySelectorAll('.fila-dornier-trama').forEach(fila => {
-                let divisor = parseFloat(fila.querySelector('.d_trama_divisor').value) || 1;
-                let nm = parseFloat(fila.querySelector('.d_trama_nm').value) || 0;
+            // 5. TRAMA: Cálculo Dinámico e Inteligente en Tabla
+            let filas_trama = document.querySelectorAll('.fila-dornier-trama');
+            let colores_escritos = 0;
+            
+            // Primero contamos los colores activos
+            filas_trama.forEach(fila => {
+                if(fila.querySelector('.dornier-t-color').value.trim() !== '') {
+                    colores_escritos++;
+                }
+            });
+            
+            // Si hay colores escritos, ese es el divisor, sino por defecto se divide entre la cantidad de filas
+            let divisor_trama = colores_escritos > 0 ? colores_escritos : filas_trama.length;
 
+            let gran_total_trama = 0;
+            filas_trama.forEach(fila => {
                 let kilos = 0;
                 let lbs_color = 0;
-                if (nm > 0) {
+                let tiene_color = fila.querySelector('.dornier-t-color').value.trim() !== '';
+
+                if (nm_universal > 0) {
                     // Metros lineales * Metros Urdir
-                    kilos = (metros_lineales_dornier * metros_urdir_dornier) / nm / 1000;
+                    kilos = (metros_lineales_dornier * metros_urdir_dornier) / nm_universal / 1000;
                     let lbs_total_hilo = kilos * 2.2046;
-                    lbs_color = Math.ceil(lbs_total_hilo / divisor); // Se divide entre los colores y se aproxima
+                    // Se divide entre los colores y se aproxima a mayor
+                    lbs_color = Math.ceil(lbs_total_hilo / divisor_trama); 
                 }
                 fila.querySelector('.d_trama_kilos').innerText = kilos.toFixed(3);
-                fila.querySelector('.d_trama_lbs').innerText = lbs_color;
-                gran_total_trama += lbs_color;
+                
+                // Si la fila está vacía y ya hay otros colores, ponemos cero
+                if (colores_escritos === 0 || tiene_color) {
+                    fila.querySelector('.d_trama_lbs').innerText = lbs_color;
+                    gran_total_trama += lbs_color;
+                } else {
+                    fila.querySelector('.d_trama_lbs').innerText = '0';
+                }
             });
             document.getElementById('d_trama_gran_total').innerText = gran_total_trama;
         }
@@ -588,32 +621,6 @@ document.addEventListener("DOMContentLoaded", function() {
         // Agregar Eventos Dornier
         document.getElementById('panel_dornier').addEventListener('input', function(e) {
             if (e.target.classList.contains('dornier-input')) calcularDornier();
-        });
-
-        // Botones Añadir Filas Dornier
-        document.getElementById('btn_add_d_pie').addEventListener('click', function() {
-            let fila = document.querySelector('.fila-dornier-pie').cloneNode(true);
-            fila.querySelectorAll('input').forEach(i => i.value = '');
-            fila.querySelectorAll('.d_pie_tot_hilos, .d_pie_kilos, .d_pie_lbs').forEach(s => s.innerText = '0');
-            document.getElementById('tbody-dornier-pie').appendChild(fila);
-        });
-        document.getElementById('btn_add_d_trama').addEventListener('click', function() {
-            let fila = document.querySelector('.fila-dornier-trama').cloneNode(true);
-            fila.querySelectorAll('input').forEach(i => i.value = '');
-            fila.querySelector('.d_trama_divisor').value = '1';
-            fila.querySelectorAll('.d_trama_kilos, .d_trama_lbs').forEach(s => s.innerText = '0');
-            document.getElementById('tbody-dornier-trama').appendChild(fila);
-        });
-
-        // Eliminar Filas
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('btn-del-dornier')) {
-                let tbody = e.target.closest('tbody');
-                if (tbody.querySelectorAll('tr').length > 1) {
-                    e.target.closest('tr').remove();
-                    calcularDornier();
-                }
-            }
         });
 
         calcularSomet();
@@ -662,7 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-dornier-pie').forEach(fila => {
                 let color = fila.querySelector('.dornier-color').value;
                 if(color.trim() !== '') {
-                    arrDornierPie.push({ color: color, hilos_repeticion: fila.querySelector('.d_pie_hilos_rep').value, total_hilos_color: fila.querySelector('.d_pie_tot_hilos').innerText, nm: fila.querySelector('.d_pie_nm').value, lbs_final: fila.querySelector('.d_pie_lbs').innerText });
+                    arrDornierPie.push({ color: color, hilos_repeticion: fila.querySelector('.d_pie_hilos_rep').value, total_hilos_color: fila.querySelector('.d_pie_tot_hilos').innerText, lbs_final: fila.querySelector('.d_pie_lbs').innerText });
                 }
             });
             
@@ -670,11 +677,12 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-dornier-trama').forEach(fila => {
                 let color = fila.querySelector('.dornier-t-color').value;
                 if(color.trim() !== '') {
-                    arrDornierTrama.push({ color: color, divisor: fila.querySelector('.d_trama_divisor').value, nm: fila.querySelector('.d_trama_nm').value, lbs_final: fila.querySelector('.d_trama_lbs').innerText });
+                    arrDornierTrama.push({ color: color, lbs_final: fila.querySelector('.d_trama_lbs').innerText });
                 }
             });
 
-            document.getElementById('datos_dornier_json').value = JSON.stringify({ pie: arrDornierPie, trama: arrDornierTrama });
+            let nm_unv = document.getElementById('dornier_nm_universal').value;
+            document.getElementById('datos_dornier_json').value = JSON.stringify({ nm_universal: nm_unv, pie: arrDornierPie, trama: arrDornierTrama });
             
         {% endif %}
     });
