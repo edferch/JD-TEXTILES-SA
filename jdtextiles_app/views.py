@@ -71,23 +71,26 @@ def calcular_orden(request, orden_id):
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
     
     if request.method == 'POST':
+        # Buscamos o creamos el registro de cálculo para esta orden
         calculo, creado = CalculoMaterial.objects.get_or_create(orden=orden)
-        calculo.metodo = orden.tipo # MANO o MAQUINA
+        calculo.metodo = orden.tipo # 'MANO' o 'MAQUINA'
         calculo.creado_por = request.user
         
-        # Guardar dependiendo del tipo de alfombra
+        # --- LÓGICA DE GUARDADO ---
         if orden.tipo == 'MANO':
             calculo.peine = request.POST.get('peine', '')
             calculo.hilos_por_pulgada = request.POST.get('hilos_plg', '')
             calculo.por_diente = request.POST.get('por_pua', '')
-            calculo.largo_urdir = request.POST.get('largo_urdir', '') # Guardamos Largo Urdir
+            calculo.largo_urdir = request.POST.get('largo_urdir', '')
             calculo.sq_ft = request.POST.get('hidden_sq_ft', '0')
             calculo.material_pie = request.POST.get('datos_pie_json', '[]')
             calculo.material_trama = request.POST.get('datos_trama_json', '[]')
             
         elif orden.tipo == 'MAQUINA':
-            calculo.somet_yardas = request.POST.get('somet_yardas', '0')
+            # Guardamos el JSON de SOMET
             calculo.material_somet = request.POST.get('datos_somet_json', '[]')
+            # Guardamos el JSON de DORNIER (que incluye el NM universal)
+            calculo.material_dornier = request.POST.get('datos_dornier_json', '{}')
             
         calculo.save()
         return redirect('panel_calculo')

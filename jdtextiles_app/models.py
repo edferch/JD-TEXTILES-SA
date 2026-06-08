@@ -112,5 +112,10 @@ class CalculoMaterial(models.Model):
     creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
+    # === DATOS PARA TELAR MÁQUINA (DORNIER) ===
+    material_dornier = models.TextField(verbose_name="Detalle DORNIER JSON", null=True, blank=True)
+    dornier_metros_urdir = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    dornier_metros_lineales = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
     def __str__(self):
         return f"Cálculo {self.metodo} - PO: {self.orden.po_number}"
