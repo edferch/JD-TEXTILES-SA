@@ -105,7 +105,7 @@
                             </div>
                             <div id="div_repeticiones" class="hidden">
                                 <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Repeticiones</label>
-                                <input type="number" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm outline-none input-patron">
+                                <input type="number" step="0.01" id="repeticiones" class="w-24 py-2 px-3 border border-blue-300 bg-blue-50 text-blue-800 rounded-lg text-sm text-center shadow-sm outline-none input-patron">
                             </div>
                             <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-md flex items-center gap-4">
                                 <label class="text-xs font-bold uppercase text-slate-300">Total Pies:</label>
@@ -133,7 +133,12 @@
                         </thead>
                         <tfoot id="tfoot-pie">
                             <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Pie:</td><td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_hilos">0</td><td></td><td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_lbs">0</td><td colspan="2"></td>
+                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Pie:</td>
+                                <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_hilos">0</td>
+                                <td></td>
+                                <td class="py-3 px-2 text-center text-blue-700" id="pie_gran_total_lbs">0</td>
+                                <td class="py-3 px-2 text-center text-blue-700 font-black" id="pie_gran_total_lbs_final">0</td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -157,7 +162,11 @@
                         </thead>
                         <tfoot id="tfoot-trama">
                             <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Trama:</td><td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_pasadas">0</td><td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_lbs">0</td><td colspan="2"></td>
+                                <td colspan="5" class="py-2 px-2 text-right uppercase">Total Trama:</td>
+                                <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_pasadas">0</td>
+                                <td class="py-3 px-2 text-center text-blue-700" id="trama_gran_total_lbs">0</td>
+                                <td class="py-3 px-2 text-center text-blue-700 font-black" id="trama_gran_total_lbs_final">0</td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -273,7 +282,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Repetición</label>
-                            <input type="number" id="dornier_repeticion" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 6">
+                            <input type="number" step="0.01" id="dornier_repeticion" class="w-32 py-1.5 px-3 border border-slate-300 rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 6">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">No. Métrico (Universal)</label>
@@ -448,31 +457,45 @@ document.addEventListener("DOMContentLoaded", function() {
             let tbody = document.createElement('tbody'); tbody.className = 'grupo-trama border-b-[12px] border-white bg-clip-padding'; let html = '';
             for(let i = 0; i < cantidad; i++) {
                 html += `<tr class="fila-trama hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors"><td class="p-2"><input type="text" placeholder="Material" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-nombre"></td><td class="p-2"><input type="text" placeholder="Color" class="w-full px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 placeholder-slate-400 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-color"></td><td class="p-2"><input type="number" min="1" value="1" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-unds"></td>`;
-                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc"><option value="Z">Z</option><option value="S">S</option><option value="-">-</option></select></td><td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td><td rowspan="${cantidad}" class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`; }
+                if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><select class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center focus:ring-2 focus:ring-blue-500 outline-none transition-all mat-torc"><option value="Z">Z</option><option value="S">S</option><option value="-">-</option></select></td>`; }
+                html += `<td class="p-2 align-middle border-l border-slate-100 bg-slate-50/50"><input type="number" step="0.001" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md shadow-sm text-center input-trama onzas-trama font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all"></td><td class="p-2 align-middle text-center font-bold text-slate-700 total-pasadas-row bg-slate-50/50 border-r border-slate-100 text-sm">0</td>`;
                 html += `<td class="p-2 text-center font-bold text-slate-500 lbs-est-trama-row text-xs">0</td><td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-white text-slate-800 rounded-md text-center shadow-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all lbs-final-input"></td>`;
                 if(i === 0) { html += `<td rowspan="${cantidad}" class="p-2 align-middle text-center print:hidden"><button type="button" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors btn-delete-grupo group" title="Eliminar Grupo">X</button></td>`; } html += `</tr>`;
             }
             tbody.innerHTML = html; return tbody;
         }
         function calcularPie() {
-            let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0; let grupos = document.querySelectorAll('.grupo-pie'); let suma_hilos_total = 0; let suma_lbs_total = 0;
-            grupos.forEach(grupo => { let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0; let total_hilos_grupo = hilos_pie * pies_urdir; grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2); suma_hilos_total += total_hilos_grupo; let filas = grupo.querySelectorAll('.fila-pie');
-                filas.forEach(fila => { let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0; let lbs_estimadas = Math.ceil((peso * total_hilos_grupo) / 460); fila.querySelector('.lbs-est-row').innerText = lbs_estimadas; suma_lbs_total += lbs_estimadas; }); });
-            document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2); document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_total;
+            let pies_urdir = parseFloat(document.getElementById('pies_urdir').value) || 0; let grupos = document.querySelectorAll('.grupo-pie'); let suma_hilos_total = 0; let suma_lbs_est_total = 0; let suma_lbs_final_total = 0;
+            grupos.forEach(grupo => { 
+                let hilos_pie = parseFloat(grupo.querySelector('.hilos-pie').value) || 0; 
+                let total_hilos_grupo = hilos_pie * pies_urdir; 
+                grupo.querySelector('.total-hilos-row').innerText = total_hilos_grupo.toFixed(2); 
+                suma_hilos_total += total_hilos_grupo; 
+                let filas = grupo.querySelectorAll('.fila-pie');
+                filas.forEach(fila => { 
+                    let peso = parseFloat(fila.querySelector('.peso-pie').value) || 0; 
+                    let lbs_estimadas = Math.ceil((peso * total_hilos_grupo) / 460); 
+                    fila.querySelector('.lbs-est-row').innerText = lbs_estimadas; 
+                    suma_lbs_est_total += lbs_estimadas; 
+                    let lbs_final = parseFloat(fila.querySelector('.lbs-final-input').value) || 0;
+                    suma_lbs_final_total += lbs_final;
+                }); 
+            });
+            document.getElementById('pie_gran_total_hilos').innerText = suma_hilos_total.toFixed(2); document.getElementById('pie_gran_total_lbs').innerText = suma_lbs_est_total; document.getElementById('pie_gran_total_lbs_final').innerText = suma_lbs_final_total;
         }
         function calcularTrama() {
-            let grupos = document.querySelectorAll('.grupo-trama'); let suma_pasadas_total = 0; let suma_lbs_total = 0;
+            let grupos = document.querySelectorAll('.grupo-trama'); let suma_pasadas_total = 0; let suma_lbs_est_total = 0; let suma_lbs_final_total = 0;
             grupos.forEach(grupo => { let filas = grupo.querySelectorAll('.fila-trama');
-                filas.forEach(fila => { let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0; let total_pasadas_fila = onzas * current_sqft; fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2); suma_pasadas_total += total_pasadas_fila; let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas; suma_lbs_total += lbs_estimadas; }); });
-            document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2); document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_total;
+                filas.forEach(fila => { let onzas = parseFloat(fila.querySelector('.onzas-trama').value) || 0; let total_pasadas_fila = onzas * current_sqft; fila.querySelector('.total-pasadas-row').innerText = total_pasadas_fila.toFixed(2); suma_pasadas_total += total_pasadas_fila; let lbs_estimadas = Math.ceil(total_pasadas_fila / 16); fila.querySelector('.lbs-est-trama-row').innerText = lbs_estimadas; suma_lbs_est_total += lbs_estimadas; let lbs_final = parseFloat(fila.querySelector('.lbs-final-input').value) || 0; suma_lbs_final_total += lbs_final; }); });
+            document.getElementById('trama_gran_total_pasadas').innerText = suma_pasadas_total.toFixed(2); document.getElementById('trama_gran_total_lbs').innerText = suma_lbs_est_total; document.getElementById('trama_gran_total_lbs_final').innerText = suma_lbs_final_total;
         }
 
         document.getElementById('tabla-pie').insertBefore(generarGrupoPie(1), document.getElementById('tfoot-pie')); document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(1), document.getElementById('tfoot-trama'));
         document.getElementById('btn-agregar-pie').addEventListener('click', function() { document.getElementById('tabla-pie').insertBefore(generarGrupoPie(parseInt(document.getElementById('select-compuestos-pie').value)), document.getElementById('tfoot-pie')); });
         document.getElementById('btn-agregar-trama').addEventListener('click', function() { document.getElementById('tabla-trama').insertBefore(generarGrupoTrama(parseInt(document.getElementById('select-compuestos-trama').value)), document.getElementById('tfoot-trama')); });
-        document.getElementById('tabla-pie').addEventListener('input', function(e) { if (e.target.classList.contains('input-pie')) calcularPie(); });
+        document.getElementById('tabla-pie').addEventListener('input', function(e) { if (e.target.classList.contains('input-pie') || e.target.classList.contains('lbs-final-input')) calcularPie(); });
         document.getElementById('tabla-pie').addEventListener('click', function(e) { if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-pie').length > 1) { e.target.closest('tbody').remove(); calcularPie(); } });
-        document.getElementById('tabla-trama').addEventListener('input', function(e) { if (e.target.classList.contains('input-trama')) calcularTrama(); });
+        document.getElementById('tabla-trama').addEventListener('input', function(e) { if (e.target.classList.contains('input-trama') || e.target.classList.contains('lbs-final-input')) calcularTrama(); });
         document.getElementById('tabla-trama').addEventListener('click', function(e) { if (e.target.closest('.btn-delete-grupo') && document.querySelectorAll('.grupo-trama').length > 1) { e.target.closest('tbody').remove(); calcularTrama(); } });
         document.querySelectorAll('.input-calc, .input-patron').forEach(i => i.addEventListener('input', calcularArea)); document.getElementById('tipo_patron').addEventListener('change', calcularReglaPatron);
         
@@ -640,7 +663,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-pie').forEach(fila => {
                 let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
                 if(material.trim() !== '') {
-                    arrPie.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-', peso: fila.querySelector('.peso-pie') ? fila.querySelector('.peso-pie').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
+                    arrPie.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.closest('tbody').querySelector('.mat-torc') ? fila.closest('tbody').querySelector('.mat-torc').value : '-', peso: fila.querySelector('.peso-pie') ? fila.querySelector('.peso-pie').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
                 }
             });
             document.getElementById('datos_pie_json').value = JSON.stringify(arrPie);
@@ -649,7 +672,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-trama').forEach(fila => {
                 let material = fila.querySelector('.mat-nombre') ? fila.querySelector('.mat-nombre').value : '';
                 if(material.trim() !== '') {
-                    arrTrama.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.querySelector('.mat-torc') ? fila.querySelector('.mat-torc').value : '-', onzas: fila.querySelector('.onzas-trama') ? fila.querySelector('.onzas-trama').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
+                    arrTrama.push({ material: material, color: fila.querySelector('.mat-color').value, unds: fila.querySelector('.mat-unds').value, torc: fila.closest('tbody').querySelector('.mat-torc') ? fila.closest('tbody').querySelector('.mat-torc').value : '-', onzas: fila.querySelector('.onzas-trama') ? fila.querySelector('.onzas-trama').value : '0', lbs_final: fila.querySelector('.lbs-final-input').value });
                 }
             });
             document.getElementById('datos_trama_json').value = JSON.stringify(arrTrama);
