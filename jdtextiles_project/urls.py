@@ -18,6 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views  # Importar vistas de seguridad
 
+# === PERSONALIZACIÓN BÁSICA DEL PANEL ADMIN ===
+admin.site.site_header = "JD TEXTILES SA - Administración"
+admin.site.site_title = "Portal JD Textiles"
+admin.site.index_title = "Panel de Control Directivo"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
