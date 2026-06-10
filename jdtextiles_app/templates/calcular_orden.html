@@ -198,7 +198,7 @@
                     <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex justify-between items-center">
                         <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Parámetros SOMET</h3>
                     </div>
-                    <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-6 bg-white">
+                    <div class="p-5 grid grid-cols-1 md:grid-cols-5 gap-6 bg-white">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Altura Agujas</label>
                             <input type="number" step="0.01" name="somet_altura_agujas" class="w-full py-2 px-3 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
@@ -210,6 +210,10 @@
                         <div>
                             <label class="block text-[10px] font-bold text-blue-600 uppercase mb-1">Yardas Tejidas</label>
                             <input type="number" step="0.01" id="somet_yardas" name="somet_yardas" class="w-full py-2 px-3 border border-blue-400 bg-blue-50 rounded-lg text-sm font-bold text-blue-900 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm somet-input" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-purple-600 uppercase mb-1">% de Más (Mermas)</label>
+                            <input type="number" step="0.01" id="somet_porcentaje_mas" class="w-full py-2 px-3 border border-purple-400 bg-purple-50 rounded-lg text-sm font-bold text-purple-900 outline-none focus:ring-2 focus:ring-purple-500 transition-all shadow-sm somet-input" value="15">
                         </div>
                         <div class="bg-slate-800 text-white p-3 rounded-lg shadow-inner flex flex-col justify-center items-center">
                             <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Metros Tejidos (+0.5)</span>
@@ -223,18 +227,19 @@
                         <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Cálculo de Hilo SOMET (4 Posiciones)</h3>
                     </div>
                     <div class="overflow-x-auto p-4">
-                        <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <table class="w-full text-left border-collapse min-w-[1100px]">
                             <thead>
                                 <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
                                     <th class="p-2 w-12 text-center bg-slate-50 rounded-tl-lg">Pos</th>
                                     <th class="p-2 w-48">Color / Material</th>
-                                    <th class="p-2 text-center w-24">Repetición</th>
+                                    <th class="p-2 text-center w-20">Repetición</th>
                                     <th class="p-2 text-center w-24">Quesos</th>
                                     <th class="p-2 text-center w-24 bg-slate-50">Tot. Quesos</th>
                                     <th class="p-2 text-center w-24 border-l border-slate-200">% Consumo</th>
                                     <th class="p-2 text-center w-24 bg-slate-50">Gasto Hilo</th>
                                     <th class="p-2 text-center w-24 bg-slate-50">Mts/Queso</th>
                                     <th class="p-2 text-center w-24 border-l border-slate-200">No. Métrico</th>
+                                    <th class="p-2 text-center w-20 bg-slate-50 text-slate-700">Lbs Est.</th>
                                     <th class="p-2 text-center w-24 bg-blue-50 text-blue-800 rounded-tr-lg">Lbs Finales</th>
                                 </tr>
                             </thead>
@@ -243,20 +248,21 @@
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-somet">
                                     <td class="p-2 text-center font-black text-slate-400 bg-slate-50/50">{{ i }}</td>
                                     <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none somet-color" placeholder="Nombre de hilo"></td>
-                                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-rep" placeholder="0"></td>
+                                    <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 bg-slate-50 text-slate-500 rounded-md text-center shadow-sm outline-none somet-input somet-rep" value="1" readonly title="Fijo a 1"></td>
                                     <td class="p-2"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-quesos" placeholder="0"></td>
                                     <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-tot-quesos">0</td>
                                     <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-blue-200 rounded-md text-center shadow-sm outline-none somet-input somet-pct" placeholder="%"></td>
                                     <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 somet-gasto">0.00</td>
                                     <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 somet-mtsq">0.00</td>
                                     <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none somet-input somet-nm" placeholder="0"></td>
-                                    <td class="p-2 text-center font-black text-blue-700 bg-blue-50/50 text-sm somet-lbs">0</td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 text-sm somet-lbs-est">0</td>
+                                    <td class="p-2 text-center font-black text-blue-700 bg-blue-50/50 text-sm somet-lbs-final">0</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                    <td colspan="9" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Somet:</td>
+                                    <td colspan="10" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Somet:</td>
                                     <td class="py-3 px-2 text-center text-blue-700 text-lg" id="somet_gran_total_lbs">0</td>
                                 </tr>
                             </tfoot>
@@ -287,6 +293,10 @@
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">No. Métrico (Universal)</label>
                             <input type="number" step="0.01" id="dornier_nm_universal" class="w-32 py-1.5 px-3 border border-blue-400 bg-blue-50 text-blue-900 font-bold rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-purple-600 uppercase mb-1">% de Más (Mermas)</label>
+                            <input type="number" step="0.01" id="dornier_porcentaje_mas" class="w-32 py-1.5 px-3 border border-purple-400 bg-purple-50 text-purple-900 font-bold rounded-md text-sm text-center shadow-sm dornier-input outline-none focus:ring-2 focus:ring-purple-500" value="15">
                         </div>
                         <div class="ml-auto bg-slate-800 text-white px-5 py-2 rounded-lg shadow-inner flex items-center gap-3">
                             <label class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Repeticiones Completas:</label>
@@ -328,7 +338,8 @@
                                     <th class="p-2 text-center w-24 border-l border-slate-200 bg-slate-50">Hilos por Color en Rep.</th>
                                     <th class="p-2 text-center w-24 bg-slate-50">Total Hilos por Color</th>
                                     <th class="p-2 text-center w-24 bg-slate-50 border-l border-slate-200">Kilos</th>
-                                    <th class="p-2 text-center w-24 bg-green-50 text-green-800 rounded-tr-lg">Libras (Ceil)</th>
+                                    <th class="p-2 text-center w-20 bg-slate-50 text-slate-700">Lbs Est.</th>
+                                    <th class="p-2 text-center w-24 bg-green-50 text-green-800 rounded-tr-lg">Lbs Finales</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-dornier-pie">
@@ -339,13 +350,14 @@
                                     <td class="p-2 border-l border-slate-100"><input type="number" step="0.01" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md text-center shadow-sm outline-none dornier-input d_pie_hilos_rep" placeholder="Hilos en el patrón"></td>
                                     <td class="p-2 text-center font-bold text-slate-700 bg-slate-50/50 d_pie_tot_hilos">0</td>
                                     <td class="p-2 border-l border-slate-100 text-center font-bold text-slate-500 bg-slate-50/50 d_pie_kilos">0.000</td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 text-sm d_pie_lbs_est">0</td>
                                     <td class="p-2 text-center font-black text-green-700 bg-green-50/50 text-sm d_pie_lbs">0</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                    <td colspan="4" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Pie:</td>
+                                    <td colspan="5" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Pie:</td>
                                     <td class="py-3 px-2 text-center text-green-700 text-lg" id="d_pie_gran_total">0</td>
                                 </tr>
                             </tfoot>
@@ -383,7 +395,8 @@
                                 <tr class="text-[10px] font-bold text-slate-500 uppercase border-b-2 border-slate-200">
                                     <th class="p-2 w-48">Color de Hilo (Trama)</th>
                                     <th class="p-2 text-center w-24 bg-slate-50 border-l border-slate-200">Kilos</th>
-                                    <th class="p-2 text-center w-24 bg-orange-50 text-orange-800 rounded-tr-lg">Lbs Finales (Color)</th>
+                                    <th class="p-2 text-center w-20 bg-slate-50 text-slate-700">Lbs Est.</th>
+                                    <th class="p-2 text-center w-24 bg-orange-50 text-orange-800 rounded-tr-lg">Lbs Finales</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-dornier-trama">
@@ -392,13 +405,14 @@
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors fila-dornier-trama">
                                     <td class="p-2"><input type="text" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded-md shadow-sm outline-none dornier-input dornier-t-color" placeholder="Color"></td>
                                     <td class="p-2 border-l border-slate-100 text-center font-bold text-slate-500 bg-slate-50/50 d_trama_kilos">0.000</td>
+                                    <td class="p-2 text-center font-bold text-slate-500 bg-slate-50/50 text-sm d_trama_lbs_est">0</td>
                                     <td class="p-2 text-center font-black text-orange-700 bg-orange-50/50 text-sm d_trama_lbs">0</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr class="border-t-2 border-slate-200 text-sm font-bold bg-slate-50 text-slate-800">
-                                    <td colspan="2" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Trama:</td>
+                                    <td colspan="3" class="py-3 px-2 text-right uppercase tracking-wider text-xs">Total Libras Trama:</td>
                                     <td class="py-3 px-2 text-center text-orange-700 text-lg" id="d_trama_gran_total">0</td>
                                 </tr>
                             </tfoot>
@@ -513,15 +527,16 @@ document.addEventListener("DOMContentLoaded", function() {
             else { pSomet.classList.add('hidden'); pDornier.classList.remove('hidden'); calcularDornier(); }
         });
 
-        // === LOGICA MÁQUINA SOMET (Intacta) ===
+        // === LOGICA MÁQUINA SOMET ===
         let metros_tejidos_somet = 0;
         function calcularSomet() {
             let yardas = parseFloat(document.getElementById('somet_yardas').value) || 0;
+            let pct_mas = parseFloat(document.getElementById('somet_porcentaje_mas').value) || 0;
             metros_tejidos_somet = yardas > 0 ? (yardas * 0.9144) + 0.5 : 0;
             document.getElementById('somet_metros_tejidos').innerText = metros_tejidos_somet.toFixed(2);
             let total_lbs = 0;
             document.querySelectorAll('.fila-somet').forEach(fila => {
-                let rep = parseFloat(fila.querySelector('.somet-rep').value) || 0;
+                let rep = parseFloat(fila.querySelector('.somet-rep').value) || 1;
                 let quesos = parseFloat(fila.querySelector('.somet-quesos').value) || 0;
                 let pct = parseFloat(fila.querySelector('.somet-pct').value) || 0;
                 let nm = parseFloat(fila.querySelector('.somet-nm').value) || 0;
@@ -530,9 +545,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (pct > 0 && pct <= 10) gasto = 2.75; else if (pct > 10 && pct <= 25) gasto = 3.75; else if (pct > 25) gasto = 4.5;
                 fila.querySelector('.somet-gasto').innerText = gasto.toFixed(2);
                 let mts_queso = metros_tejidos_somet * gasto; fila.querySelector('.somet-mtsq').innerText = mts_queso.toFixed(2);
-                let lbs = 0;
-                if (nm > 0 && tot_quesos > 0) { lbs = Math.ceil((((tot_quesos * mts_queso) / nm) / 1000) * 2.2046 + 1); }
-                fila.querySelector('.somet-lbs').innerText = lbs; total_lbs += lbs;
+                
+                let lbs_est = 0;
+                if (nm > 0 && tot_quesos > 0) { lbs_est = Math.ceil((((tot_quesos * mts_queso) / nm) / 1000) * 2.2046 + 1); }
+                fila.querySelector('.somet-lbs-est').innerText = lbs_est;
+                
+                let lbs_final = 0;
+                if (lbs_est > 0) { lbs_final = Math.ceil(lbs_est * (1 + (pct_mas / 100))); }
+                fila.querySelector('.somet-lbs-final').innerText = lbs_final; 
+                total_lbs += lbs_final;
             });
             document.getElementById('somet_gran_total_lbs').innerText = total_lbs;
         }
@@ -546,6 +567,7 @@ document.addEventListener("DOMContentLoaded", function() {
         function calcularDornier() {
             // 0. NÚMERO MÉTRICO UNIVERSAL
             let nm_universal = parseFloat(document.getElementById('dornier_nm_universal').value) || 0;
+            let dornier_porcentaje_mas = parseFloat(document.getElementById('dornier_porcentaje_mas').value) || 0;
 
             // 1. DESGLOSE DEL PATRÓN
             let cant_hilos = parseFloat(document.getElementById('dornier_cant_hilos').value) || 0;
@@ -581,12 +603,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 fila.querySelector('.d_pie_tot_hilos').innerText = total_hilos_color.toFixed(2);
 
                 let kilos = 0;
+                let lbs_est = 0;
                 let lbs = 0;
                 if (nm_universal > 0) {
                     kilos = (total_hilos_color * metros_urdir_dornier) / nm_universal / 1000;
-                    lbs = Math.ceil(kilos * 2.2046); // Aproxima siempre a mayor
+                    let lbs_raw = kilos * 2.2046;
+                    lbs_est = Math.ceil(lbs_raw);
+                    lbs = Math.ceil(lbs_raw * (1 + (dornier_porcentaje_mas / 100)));
                 }
                 fila.querySelector('.d_pie_kilos').innerText = kilos.toFixed(3);
+                fila.querySelector('.d_pie_lbs_est').innerText = lbs_est;
                 fila.querySelector('.d_pie_lbs').innerText = lbs;
                 gran_total_pie += lbs;
             });
@@ -618,6 +644,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let gran_total_trama = 0;
             filas_trama.forEach(fila => {
                 let kilos = 0;
+                let lbs_est_color = 0;
                 let lbs_color = 0;
                 let tiene_color = fila.querySelector('.dornier-t-color').value.trim() !== '';
 
@@ -625,16 +652,19 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Metros lineales * Metros Urdir
                     kilos = (metros_lineales_dornier * metros_urdir_dornier) / nm_universal / 1000;
                     let lbs_total_hilo = kilos * 2.2046;
-                    // Se divide entre los colores y se aproxima a mayor
-                    lbs_color = Math.ceil(lbs_total_hilo / divisor_trama); 
+                    let lbs_raw_color = lbs_total_hilo / divisor_trama;
+                    lbs_est_color = Math.ceil(lbs_raw_color);
+                    lbs_color = Math.ceil(lbs_raw_color * (1 + (dornier_porcentaje_mas / 100))); 
                 }
                 fila.querySelector('.d_trama_kilos').innerText = kilos.toFixed(3);
                 
                 // Si la fila está vacía y ya hay otros colores, ponemos cero
                 if (colores_escritos === 0 || tiene_color) {
+                    fila.querySelector('.d_trama_lbs_est').innerText = lbs_est_color;
                     fila.querySelector('.d_trama_lbs').innerText = lbs_color;
                     gran_total_trama += lbs_color;
                 } else {
+                    fila.querySelector('.d_trama_lbs_est').innerText = '0';
                     fila.querySelector('.d_trama_lbs').innerText = '0';
                 }
             });
@@ -683,7 +713,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-somet').forEach(fila => {
                 let color = fila.querySelector('.somet-color').value;
                 if(color.trim() !== '') {
-                    arrSomet.push({ color: color, repeticiones: fila.querySelector('.somet-rep').value, quesos: fila.querySelector('.somet-quesos').value, porcentaje: fila.querySelector('.somet-pct').value, nm: fila.querySelector('.somet-nm').value, lbs_final: fila.querySelector('.somet-lbs').innerText });
+                    arrSomet.push({ color: color, repeticiones: fila.querySelector('.somet-rep').value, quesos: fila.querySelector('.somet-quesos').value, porcentaje: fila.querySelector('.somet-pct').value, nm: fila.querySelector('.somet-nm').value, lbs_est: fila.querySelector('.somet-lbs-est').innerText, lbs_final: fila.querySelector('.somet-lbs-final').innerText });
                 }
             });
             document.getElementById('datos_somet_json').value = JSON.stringify(arrSomet);
@@ -692,7 +722,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-dornier-pie').forEach(fila => {
                 let color = fila.querySelector('.dornier-color').value;
                 if(color.trim() !== '') {
-                    arrDornierPie.push({ color: color, hilos_repeticion: fila.querySelector('.d_pie_hilos_rep').value, total_hilos_color: fila.querySelector('.d_pie_tot_hilos').innerText, lbs_final: fila.querySelector('.d_pie_lbs').innerText });
+                    arrDornierPie.push({ color: color, hilos_repeticion: fila.querySelector('.d_pie_hilos_rep').value, total_hilos_color: fila.querySelector('.d_pie_tot_hilos').innerText, lbs_est: fila.querySelector('.d_pie_lbs_est').innerText, lbs_final: fila.querySelector('.d_pie_lbs').innerText });
                 }
             });
             
@@ -700,7 +730,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.fila-dornier-trama').forEach(fila => {
                 let color = fila.querySelector('.dornier-t-color').value;
                 if(color.trim() !== '') {
-                    arrDornierTrama.push({ color: color, lbs_final: fila.querySelector('.d_trama_lbs').innerText });
+                    arrDornierTrama.push({ color: color, lbs_est: fila.querySelector('.d_trama_lbs_est').innerText, lbs_final: fila.querySelector('.d_trama_lbs').innerText });
                 }
             });
 
