@@ -70,29 +70,21 @@ def panel_calculo(request):
 def calcular_orden(request, orden_id):
     orden = get_object_or_404(OrdenTrabajo, id=orden_id)
     
+    # Buscamos si ya existe un cálculo previo para editarlo
+    try:
+        calculo = CalculoMaterial.objects.get(orden=orden)
+    except CalculoMaterial.DoesNotExist:
+        calculo = None
+
     if request.method == 'POST':
-        # Buscamos o creamos el registro de cálculo para esta orden
-        calculo, creado = CalculoMaterial.objects.get_or_create(orden=orden)
-        calculo.metodo = orden.tipo # 'MANO' o 'MAQUINA'
-        calculo.creado_por = request.user
+        form = CalculoMaterialForm(request.POST, instance=calculo)
+        if form.is_valid():
+            calculo_obj = form.save(commit=False)
+            calculo_obj.orden = orden
+            calculo_obj.creado_por = request.user
+            calculo_obj.save()
+            return redirect('panel_calculo')
+    else:
+        form = CalculoMaterialForm(instance=calculo)
         
-        # --- LÓGICA DE GUARDADO ---
-        if orden.tipo == 'MANO':
-            calculo.peine = request.POST.get('peine', '')
-            calculo.hilos_por_pulgada = request.POST.get('hilos_plg', '')
-            calculo.por_diente = request.POST.get('por_pua', '')
-            calculo.largo_urdir = request.POST.get('largo_urdir', '')
-            calculo.sq_ft = request.POST.get('hidden_sq_ft', '0')
-            calculo.material_pie = request.POST.get('datos_pie_json', '[]')
-            calculo.material_trama = request.POST.get('datos_trama_json', '[]')
-            
-        elif orden.tipo == 'MAQUINA':
-            # Guardamos el JSON de SOMET
-            calculo.material_somet = request.POST.get('datos_somet_json', '[]')
-            # Guardamos el JSON de DORNIER (que incluye el NM universal)
-            calculo.material_dornier = request.POST.get('datos_dornier_json', '{}')
-            
-        calculo.save()
-        return redirect('panel_calculo')
-        
-    return render(request, 'calcular_orden.html', {'orden': orden})
+    return render(request, 'calcular_orden.html', {'orden': orden, 'form': form})

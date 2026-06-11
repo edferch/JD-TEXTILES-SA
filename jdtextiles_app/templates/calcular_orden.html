@@ -1,9 +1,73 @@
 {% extends 'base.html' %}
 
 {% block title %}Cálculo de Material: {{ orden.po_number }} - JD Textiles{% endblock %}
-{% block header %}Cálculo de Material: {{ orden.po_number }}{% endblock %}
+{% block header %}Ingreso de Cálculo Manual: {{ orden.po_number }}{% endblock %}
 
 {% block content %}
+<div class="p-4 md:p-6 min-h-screen">
+    <div class="bg-white rounded-xl shadow-md border border-slate-200 p-8 max-w-4xl mx-auto">
+        
+        <!-- Encabezado con Datos de la Alfombra -->
+        <div class="mb-8 p-6 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">Información de la Alfombra</h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">PO Number</span>
+                    <span class="text-base font-black text-blue-700 bg-blue-50 px-2 py-1 rounded border border-blue-200 inline-block">{{ orden.po_number }}</span>
+                </div>
+                <div>
+                    <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cliente</span>
+                    <span class="text-sm font-semibold text-slate-800">{{ orden.cliente }}</span>
+                </div>
+                <div>
+                    <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Diseño</span>
+                    <span class="text-sm font-semibold text-slate-800">{{ orden.diseno }}</span>
+                </div>
+                <div>
+                    <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Medidas</span>
+                    <span class="text-sm font-black text-slate-800">{{ orden.ancho_ft|stringformat:"s" }}' {{ orden.ancho_in|stringformat:"s" }}" <span class="text-slate-400 font-normal mx-1">x</span> {{ orden.largo_ft|stringformat:"s" }}' {{ orden.largo_in|stringformat:"s" }}"</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Ingreso Manual -->
+        <form method="POST" autocomplete="off" class="space-y-6">
+            {% csrf_token %}
+            
+            <h3 class="text-lg font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">Datos y Resultados del Cálculo</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                    <div class="{% if field.name == 'material_pie' or field.name == 'material_trama' %}md:col-span-2{% endif %}">
+                        <label class="block text-slate-700 text-xs font-bold mb-2 uppercase tracking-wide">{{ field.label }}</label>
+                        {{ field }}
+                        
+                        {% if field.help_text %}
+                            <p class="text-[11px] text-slate-500 mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                            <p class="text-xs text-red-500 mt-1 font-bold">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-slate-200 flex justify-end gap-4">
+                <a href="{% url 'panel_calculo' %}" class="bg-white hover:bg-slate-50 text-slate-600 border border-slate-300 shadow-sm font-bold py-2.5 px-6 rounded-lg transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded-lg shadow-md transition-colors">
+                    Guardar Cálculo Manual
+                </button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+{% comment "Código anterior de cálculo automatizado EN STAND BY" %}
 <style>
     @media print {
         body { background-color: white !important; -webkit-print-color-adjust: exact; }
@@ -429,6 +493,8 @@
         <input type="hidden" name="datos_trama_json" id="datos_trama_json">
         <input type="hidden" name="datos_somet_json" id="datos_somet_json">
         <input type="hidden" name="datos_dornier_json" id="datos_dornier_json">
+        <input type="hidden" name="dornier_metros_urdir" id="hidden_dornier_metros_urdir">
+        <input type="hidden" name="dornier_metros_lineales" id="hidden_dornier_metros_lineales">
 
         <div class="flex justify-end gap-4 mt-8 pb-10 print:hidden">
             <button type="button" onclick="window.print()" class="bg-white border border-slate-300 text-slate-700 text-sm font-bold py-2.5 px-6 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">Generar PDF</button>
@@ -736,9 +802,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
             let nm_unv = document.getElementById('dornier_nm_universal').value;
             document.getElementById('datos_dornier_json').value = JSON.stringify({ nm_universal: nm_unv, pie: arrDornierPie, trama: arrDornierTrama });
+            document.getElementById('hidden_dornier_metros_urdir').value = metros_urdir_dornier;
+            document.getElementById('hidden_dornier_metros_lineales').value = metros_lineales_dornier;
             
         {% endif %}
     });
 });
 </script>
+{% endcomment %}
 {% endblock %}
